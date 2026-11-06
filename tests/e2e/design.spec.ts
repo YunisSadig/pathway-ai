@@ -19,6 +19,8 @@ for (const [device, width, height] of [
         theme === "dark" ? "rgb(165, 180, 252)" : "rgb(79, 70, 229)",
       );
       await page.evaluate(() => document.fonts.ready);
+      await expect(page.locator(".hero-art")).toHaveCSS("opacity", "1");
+      await expect(page.locator(".hero-copy")).toHaveCSS("opacity", "1");
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,

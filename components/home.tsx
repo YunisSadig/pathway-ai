@@ -13,15 +13,16 @@ import {
   Route,
   Sparkles,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 export function HomeExperience() {
+  const reduced = useReducedMotion();
   return (
     <main id="main">
       <section className="hero container">
         <motion.div
           className="hero-copy"
-          initial={{ opacity: 0, y: 15 }}
+          initial={reduced ? false : { opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
         >
@@ -78,7 +79,7 @@ export function HomeExperience() {
         </motion.div>
         <motion.div
           className="hero-art"
-          initial={{ opacity: 0, scale: 0.97 }}
+          initial={reduced ? false : { opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >

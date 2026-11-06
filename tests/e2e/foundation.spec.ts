@@ -8,5 +8,7 @@ test("homepage is reachable", async ({ page }) => {
 });
 test("homepage @a11y", async ({ page }) => {
   await page.goto("/");
+  await expect(page.locator(".hero-art")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".hero-copy")).toHaveCSS("opacity", "1");
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
