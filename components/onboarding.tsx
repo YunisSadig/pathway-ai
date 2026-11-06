@@ -36,7 +36,7 @@ const intros = [
   "Let’s make room for the real world.",
 ];
 export function Onboarding() {
-  const { state, update } = useProfile();
+  const { state, update } = useProfile({ draft: true });
   const { profile: p, step } = state;
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [storageError, setStorageError] = useState(false);
@@ -98,7 +98,7 @@ export function Onboarding() {
           min={min}
           max={max}
           step={increment}
-          value={p[key]}
+          value={Number.isFinite(p[key]) ? p[key] : ""}
           onChange={(e) =>
             set(key, e.target.value === "" ? NaN : Number(e.target.value))
           }
