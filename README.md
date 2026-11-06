@@ -35,6 +35,8 @@ GitHub Actions performs the same checks with read-only repository permissions, r
 
 ## Decisions
 
+Mobile homepage screenshots use separate reviewed Windows and Linux references because native font metrics and flag emoji change wrapping at 375px. The other fourteen screenshots share references. Keep the same comparison tolerance on both platforms; inspect actual/diff artifacts before proposing changes.
+
 - Keep a single frontend app with small components and pure calculation functions.
 - Store demonstration preferences locally; treat browser storage as untrusted input.
 - Separate fictional program data from UI for a future Spring Boot API adapter.

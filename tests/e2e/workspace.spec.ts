@@ -11,6 +11,25 @@ const routes = [
   "/finance",
   "/advisor",
 ];
+test("unfinished numeric drafts do not leak NaN into planning", async ({
+  page,
+}) => {
+  await page.goto("/onboarding");
+  await page.getByLabel("What should we call you?").fill("Demo");
+  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByLabel("Annual budget (€)").fill("");
+  await page
+    .getByRole("link", { name: "Find your university", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Find a place to become you." }),
+  ).toBeVisible();
+  await expect(page.locator("body")).not.toContainText("NaN");
+  await expect(
+    page.getByRole("checkbox", { name: /Within my €18,000 budget/ }),
+  ).toBeVisible();
+});
 test("saved profile changes update matching and long text wraps", async ({
   page,
 }) => {

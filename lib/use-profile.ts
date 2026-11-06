@@ -1,5 +1,5 @@
 "use client";
-import { useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { decodeState, initialState, type SavedState } from "@/lib/profile";
 export const storageKey = "pathway-profile-v1";
 let cached = initialState;
@@ -45,7 +45,11 @@ export function updateProfile(
   listeners.forEach((fn) => fn());
   return persisted;
 }
-export function useProfile() {
+export function useProfile({ draft = false }: { draft?: boolean } = {}) {
   const state = useSyncExternalStore(subscribe, snapshot, () => initialState);
-  return { state, update: updateProfile };
+  const safeState = useMemo(
+    () => decodeState(JSON.stringify({ version: 1, ...state })),
+    [state],
+  );
+  return { state: draft ? state : safeState, update: updateProfile };
 }

@@ -23,7 +23,12 @@ for (const [device, width, height] of [
           await expect(page.locator(".hero-art")).toHaveCSS("opacity", "1");
           await expect(page.locator(".hero-copy")).toHaveCSS("opacity", "1");
         }
-        await expect(page).toHaveScreenshot(`${name}-${device}-${theme}.png`, {
+        const filename = `${name}-${device}-${theme}.png`;
+        const snapshot =
+          name === "home" && device === "mobile"
+            ? [process.platform, filename]
+            : [filename];
+        await expect(page).toHaveScreenshot(snapshot, {
           animations: "disabled",
           maxDiffPixelRatio: 0.02,
           threshold: 0.25,

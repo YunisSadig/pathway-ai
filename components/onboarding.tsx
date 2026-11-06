@@ -36,7 +36,7 @@ const intros = [
   "Let’s make room for the real world.",
 ];
 export function Onboarding() {
-  const { state, update } = useProfile();
+  const { state, update } = useProfile({ draft: true });
   const { profile: p, step } = state;
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [storageError, setStorageError] = useState(false);
