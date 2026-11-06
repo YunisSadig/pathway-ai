@@ -19,6 +19,9 @@ for (const [device, width, height] of [
         );
         await page.goto(route);
         await page.evaluate(() => document.fonts.ready);
+        await expect(
+          page.getByRole("button", { name: /Color theme:/ }),
+        ).toBeEnabled();
         if (name === "home") {
           await expect(page.locator(".hero-art")).toHaveCSS("opacity", "1");
           await expect(page.locator(".hero-copy")).toHaveCSS("opacity", "1");

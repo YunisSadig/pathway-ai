@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useHydrated } from "@/lib/use-hydrated";
 import { ArrowUpRight, Wallet } from "lucide-react";
 import Link from "next/link";
 import { Workspace, PageIntro } from "@/components/workspace";
@@ -51,6 +52,7 @@ function Budget({
   initialBudget: number;
 }) {
   const [rent, setRent] = useState(p.rent);
+  const ready = useHydrated();
   const [buffer, setBuffer] = useState(10);
   const [budget, setBudget] = useState(initialBudget);
   const c = costs(p, rent, buffer);
@@ -114,6 +116,7 @@ function Budget({
             </span>
             <input
               aria-label="Monthly rent"
+              disabled={!ready}
               type="range"
               min={200}
               max={1600}
@@ -129,6 +132,7 @@ function Budget({
             </span>
             <input
               aria-label="Contingency buffer"
+              disabled={!ready}
               type="range"
               min={0}
               max={25}
@@ -144,6 +148,7 @@ function Budget({
             </span>
             <input
               aria-label="Annual scenario budget"
+              disabled={!ready}
               type="range"
               min={3000}
               max={150000}

@@ -39,6 +39,7 @@ export function ThemeControl() {
       <Menu.Trigger asChild>
         <button
           type="button"
+          disabled={!mounted}
           className="icon-button theme-trigger"
           aria-label={`Color theme: ${selected}. Change appearance`}
           title="Change appearance"

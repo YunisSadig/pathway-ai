@@ -19,6 +19,7 @@ export function ProgramCard({
   compareDisabled?: boolean;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const opener = useRef<HTMLButtonElement>(null);
   const result = match(profile, p);
   return (
     <article className="program-card">
@@ -67,7 +68,11 @@ export function ProgramCard({
           <Button
             variant="ghost"
             size="small"
-            onClick={() => dialog.current?.showModal()}
+            ref={opener}
+            onClick={(e) => {
+              e.currentTarget.focus();
+              dialog.current?.showModal();
+            }}
           >
             Explore program <ArrowUpRight size={14} />
           </Button>
@@ -86,6 +91,7 @@ export function ProgramCard({
       </div>
       <dialog
         ref={dialog}
+        onClose={() => opener.current?.focus({ preventScroll: true })}
         className="program-dialog"
         aria-labelledby={`${p.id}-title`}
         onClick={(e) => {

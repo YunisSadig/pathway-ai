@@ -23,13 +23,13 @@ No saved assessment is required to explore: workspace screens show a clearly lab
 
 ```sh
 npm run check
-npx playwright install chromium
+npx playwright install chromium firefox webkit
 npm run test:e2e
 ```
 
 `check` runs formatting, ESLint, TypeScript, Vitest, and a production build. Playwright runs browser journeys and axe accessibility checks against the production app. See CONTRIBUTING.md for review expectations.
 
-Visual regression baselines cover four important screens in both themes at mobile and desktop sizes. To propose an intentional update, run `npx playwright test tests/e2e/visual.spec.ts --update-snapshots`, inspect each changed image and diff, then rerun the suite without that flag. Never regenerate baselines to hide a failure. Full-screen responsive/axe coverage also includes tablet and all workspace routes. Chromium is the current browser target; manual screen-reader and additional browser audits remain future work.
+Visual regression baselines cover four important screens in both themes at mobile and desktop sizes. To propose an intentional update, run `npx playwright test tests/e2e/visual.spec.ts --project=chromium --update-snapshots`, inspect each changed image and diff, then rerun without that flag. Never regenerate baselines to hide a failure. Chromium runs the full responsive/axe/journey/visual suite, including tablet and all routes. Firefox and WebKit run focused desktop/mobile journeys, menu/dialog/focus checks, and light/dark axe coverage. These engines are not real Safari or physical-device tests. Manual browser/screen-reader acceptance is recorded in AUDIT.md and remains outstanding.
 
 GitHub Actions performs the same checks with read-only repository permissions, report uploads on failure, and no deployment. Main requires **Frontend checks**, blocks force pushes/deletion, and allows the owner to maintain the repository. Significant merges require explicit owner approval. Dependent PRs may temporarily target the preceding feature branch while review is pending; retarget to main in dependency order after approval.
 

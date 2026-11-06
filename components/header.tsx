@@ -5,6 +5,7 @@ import { ArrowUpRight, Menu, Route, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeControl } from "@/components/theme-control";
+import { useHydrated } from "@/lib/use-hydrated";
 export const navigation = [
   ["Overview", "/dashboard"],
   ["Discover", "/universities"],
@@ -15,6 +16,7 @@ export const navigation = [
   ["Advisor preview", "/advisor"],
 ];
 export function Header() {
+  const ready = useHydrated();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const header = useRef<HTMLElement>(null);
@@ -87,6 +89,7 @@ export function Header() {
             <button
               type="button"
               ref={trigger}
+              disabled={!ready}
               className="icon-button mobile-toggle"
               aria-label={open ? "Close navigation" : "Open navigation"}
               aria-expanded={open}

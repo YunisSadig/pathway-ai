@@ -21,6 +21,7 @@ import {
   type ProfileErrors,
 } from "@/lib/profile";
 import { useProfile } from "@/lib/use-profile";
+import { useHydrated } from "@/lib/use-hydrated";
 const steps = [
   "Your starting point",
   "Your academic story",
@@ -36,12 +37,15 @@ const intros = [
   "Let’s make room for the real world.",
 ];
 export function Onboarding() {
+  const ready = useHydrated();
   const { state, update } = useProfile({ draft: true });
   const { profile: p, step } = state;
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [storageError, setStorageError] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const resetDialog = useRef<HTMLDialogElement>(null);
+  const resetTrigger = useRef<HTMLButtonElement>(null);
+  const clearing = useRef(false);
   const previousStep = useRef(step);
   const router = useRouter();
   useEffect(() => {
@@ -455,14 +459,25 @@ export function Onboarding() {
         </form>
         <button
           className="reset-link"
+          ref={resetTrigger}
+          disabled={!ready}
           type="button"
           aria-haspopup="dialog"
-          onClick={() => resetDialog.current?.showModal()}
+          onClick={(e) => {
+            e.currentTarget.focus();
+            resetDialog.current?.showModal();
+          }}
         >
           <RotateCcw size={12} /> Start fresh
         </button>
         <dialog
           ref={resetDialog}
+          onClose={() => {
+            if (clearing.current) {
+              clearing.current = false;
+              heading.current?.focus();
+            } else resetTrigger.current?.focus({ preventScroll: true });
+          }}
           className="program-dialog reset-dialog"
           aria-labelledby="reset-title"
           aria-describedby="reset-description"
@@ -489,10 +504,10 @@ export function Onboarding() {
               type="button"
               variant="destructive"
               onClick={() => {
+                clearing.current = true;
                 update(initialState);
                 setErrors({});
                 resetDialog.current?.close();
-                requestAnimationFrame(() => heading.current?.focus());
               }}
             >
               Clear demo profile
