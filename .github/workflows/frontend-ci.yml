@@ -27,7 +27,13 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-      - run: npx playwright install --with-deps chromium
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install browser and system dependencies
+        timeout-minutes: 8
+        run: npx playwright install --with-deps --only-shell chromium
       - name: Browser journeys and accessibility
         run: npm run test:e2e
       - uses: actions/upload-artifact@v4

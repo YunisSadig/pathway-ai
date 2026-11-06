@@ -98,7 +98,7 @@ export function Onboarding() {
           min={min}
           max={max}
           step={increment}
-          value={p[key]}
+          value={Number.isFinite(p[key]) ? p[key] : ""}
           onChange={(e) =>
             set(key, e.target.value === "" ? NaN : Number(e.target.value))
           }
