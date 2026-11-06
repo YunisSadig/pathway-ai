@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@fontsource-variable/manrope";
+import "@fontsource-variable/inter";
+import { Providers } from "@/components/providers";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Pathway AI — Your next chapter, with a plan",
@@ -11,8 +16,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>
+          <Header />
+          {children}
+          <Footer />
+        </Providers>
+      </body>
     </html>
   );
 }
