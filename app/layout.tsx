@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./interactions.css";
 import "@fontsource-variable/manrope";
 import "@fontsource-variable/inter";
 import { Providers } from "@/components/providers";

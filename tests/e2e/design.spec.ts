@@ -12,7 +12,10 @@ for (const [device, width, height] of [
       await page.setViewportSize({ width, height });
       await page.emulateMedia({ reducedMotion: "reduce" });
       await page.goto("/");
-      await page.getByLabel("Color theme").selectOption(theme);
+      await page.getByRole("button", { name: /Color theme:/ }).click();
+      await page
+        .getByRole("menuitemradio", { name: new RegExp(`^${theme}`, "i") })
+        .click();
       await expect(page.locator("html")).toHaveClass(theme);
       await expect(page.locator(".closing .button-primary")).toHaveCSS(
         "background-color",
@@ -43,7 +46,9 @@ for (const [device, width, height] of [
         contentType: "image/png",
       });
       await page.reload();
-      await expect(page.getByLabel("Color theme")).toHaveValue(theme);
+      await expect(
+        page.getByRole("button", { name: new RegExp(`Color theme: ${theme}`) }),
+      ).toBeVisible();
     });
   }
 }
@@ -55,8 +60,10 @@ test("system theme and keyboard skip navigation", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Skip to content" }),
   ).toBeFocused();
-  await page.getByLabel("Color theme").selectOption("light");
+  await page.getByRole("button", { name: /Color theme:/ }).click();
+  await page.getByRole("menuitemradio", { name: /^Light/ }).click();
   await expect(page.locator("html")).toHaveClass("light");
-  await page.getByLabel("Color theme").selectOption("system");
+  await page.getByRole("button", { name: /Color theme:/ }).click();
+  await page.getByRole("menuitemradio", { name: /^System/ }).click();
   await expect(page.locator("html")).toHaveClass("dark");
 });
