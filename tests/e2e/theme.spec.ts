@@ -6,7 +6,9 @@ test("theme menu keyboard, dismissal, persistence, and system preference @a11y",
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
   await page.goto("/");
   const trigger = page.getByRole("button", { name: /Color theme:/ });
+  await expect(trigger).toBeEnabled();
   await trigger.focus();
+  await expect(trigger).toBeFocused();
   await page.keyboard.press("ArrowDown");
   await expect(page.getByRole("menu")).toBeVisible();
   await page.keyboard.press("End");
@@ -33,7 +35,7 @@ test("theme menu keyboard, dismissal, persistence, and system preference @a11y",
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();
   await trigger.click();
-  await page.getByRole("heading", { name: /Your future/ }).click();
+  await page.mouse.click(5, 400);
   await expect(page.getByRole("menu")).not.toBeVisible();
   await page.reload();
   await expect(trigger).toHaveAccessibleName(/Color theme: dark/);

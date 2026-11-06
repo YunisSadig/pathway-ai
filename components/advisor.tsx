@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
+import { useHydrated } from "@/lib/use-hydrated";
 import { ArrowUpRight, MessageCircle, Send } from "lucide-react";
 import Link from "next/link";
 import { Workspace, PageIntro } from "@/components/workspace";
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useProfile } from "@/lib/use-profile";
 type Message = { role: "user" | "advisor"; text: string };
 export function Advisor() {
+  const ready = useHydrated();
   const { state } = useProfile();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -92,7 +94,7 @@ export function Advisor() {
                 "What if I improve my IELTS?",
                 "Help me explore a backup route",
               ].map((q) => (
-                <button key={q} onClick={() => send(q)}>
+                <button key={q} disabled={!ready} onClick={() => send(q)}>
                   {q}
                   <ArrowUpRight size={13} />
                 </button>
@@ -111,6 +113,7 @@ export function Advisor() {
             </label>
             <input
               id="advisor-message"
+              disabled={!ready}
               ref={inputRef}
               placeholder="Ask a demo question…"
               maxLength={500}

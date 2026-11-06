@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { useHydrated } from "@/lib/use-hydrated";
 export function Field({
   label,
   error,
@@ -12,14 +13,17 @@ export function Field({
     id: string;
     "aria-invalid": boolean;
     "aria-describedby": string | undefined;
+    disabled: boolean;
   }) => React.ReactNode;
 }) {
   const id = useId();
+  const ready = useHydrated();
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
       {children({
         id,
+        disabled: !ready,
         "aria-invalid": !!error,
         "aria-describedby": error || hint ? `${id}-help` : undefined,
       })}

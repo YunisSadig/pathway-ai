@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight, Check, Globe2 } from "lucide-react";
 import { Workspace, PageIntro } from "@/components/workspace";
 import { useProfile } from "@/lib/use-profile";
+import { useHydrated } from "@/lib/use-hydrated";
 const topics = [
   {
     name: "Student life",
@@ -84,6 +85,7 @@ const topics = [
   },
 ];
 export function LifeAbroad() {
+  const ready = useHydrated();
   const [topic, setTopic] = useState(0);
   const [show, setShow] = useState(false);
   const { state } = useProfile();
@@ -109,6 +111,7 @@ export function LifeAbroad() {
         {topics.map((t, i) => (
           <button
             key={t.name}
+            disabled={!ready}
             aria-pressed={i === topic}
             onClick={() => {
               setTopic(i);
@@ -128,6 +131,7 @@ export function LifeAbroad() {
           <h2>{current.expectation}</h2>
           <button
             className="button button-outline"
+            disabled={!ready}
             aria-expanded={show}
             aria-controls="reality"
             onClick={() => setShow(!show)}

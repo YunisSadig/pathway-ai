@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useHydrated } from "@/lib/use-hydrated";
 import { ArrowRight, ArrowUpRight, Check, FlaskConical } from "lucide-react";
 import { motion } from "motion/react";
 import { Workspace, PageIntro } from "@/components/workspace";
@@ -20,6 +21,7 @@ export function Improvement() {
   );
 }
 function Lab({ profile: p }: { profile: Profile }) {
+  const ready = useHydrated();
   const { state, update } = useProfile();
   const [ielts, setIelts] = useState(p.ielts);
   const [sat, setSat] = useState(p.sat);
@@ -49,6 +51,7 @@ function Lab({ profile: p }: { profile: Profile }) {
               IELTS target <strong>{ielts.toFixed(1)}</strong>
             </span>
             <input
+              disabled={!ready}
               aria-label="IELTS target"
               type="range"
               min={0}
@@ -68,6 +71,7 @@ function Lab({ profile: p }: { profile: Profile }) {
             </span>
             <input
               aria-label="SAT target"
+              disabled={!ready}
               aria-valuetext={
                 sat
                   ? `${sat} points`

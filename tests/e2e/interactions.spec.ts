@@ -29,6 +29,20 @@ test("reset confirmation protects progress and restores focus", async ({
   await page.getByLabel("What should we call you?").fill("Keep me");
   await page.getByRole("button", { name: "Start fresh" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Keep my progress" }),
+  ).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Clear demo profile" }),
+  ).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(
+    page.getByRole("button", { name: "Keep my progress" }),
+  ).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: "Start fresh" })).toBeFocused();
+  await page.getByRole("button", { name: "Start fresh" }).click();
   await page.getByRole("button", { name: "Keep my progress" }).click();
   await expect(page.getByLabel("What should we call you?")).toHaveValue(
     "Keep me",

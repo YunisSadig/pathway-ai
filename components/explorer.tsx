@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useHydrated } from "@/lib/use-hydrated";
 import { ArrowDownUp, Search, SlidersHorizontal, X } from "lucide-react";
 import { programs } from "@/lib/programs";
 import { countries, fields } from "@/lib/profile";
@@ -9,6 +10,7 @@ import { Workspace, PageIntro } from "@/components/workspace";
 import { ProgramCard } from "@/components/program-card";
 import { Button } from "@/components/ui/button";
 export function Explorer() {
+  const ready = useHydrated();
   const { state } = useProfile();
   const p = state.profile;
   const [query, setQuery] = useState("");
@@ -54,6 +56,7 @@ export function Explorer() {
           <Search size={17} />
           <span className="sr-only">Search programs</span>
           <input
+            disabled={!ready}
             placeholder="University, program, or city…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -64,6 +67,7 @@ export function Explorer() {
           <select
             className="filter-input"
             value={country}
+            disabled={!ready}
             onChange={(e) => setCountry(e.target.value)}
           >
             <option value="">All destinations</option>
@@ -77,6 +81,7 @@ export function Explorer() {
           <select
             className="filter-input"
             value={field}
+            disabled={!ready}
             onChange={(e) => setField(e.target.value)}
           >
             <option value="">All study fields</option>
@@ -93,6 +98,7 @@ export function Explorer() {
             <input
               type="checkbox"
               checked={affordable}
+              disabled={!ready}
               onChange={(e) => setAffordable(e.target.checked)}
             />
             Within my {euro(p.budget)} budget
@@ -101,7 +107,11 @@ export function Explorer() {
         <label className="sort-label">
           <ArrowDownUp size={13} />
           <span className="sr-only">Sort programs</span>
-          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+          <select
+            disabled={!ready}
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+          >
             <option value="fit">Best demo fit</option>
             <option value="cost">Lowest total cost</option>
           </select>
@@ -121,7 +131,8 @@ export function Explorer() {
               selected={selected.includes(program.id)}
               onCompare={() => toggle(program.id)}
               compareDisabled={
-                selected.length === 3 && !selected.includes(program.id)
+                !ready ||
+                (selected.length === 3 && !selected.includes(program.id))
               }
             />
           ))}

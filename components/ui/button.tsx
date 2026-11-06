@@ -1,4 +1,6 @@
+"use client";
 import { Slot } from "@radix-ui/react-slot";
+import { useHydrated } from "@/lib/use-hydrated";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 const buttonVariants = cva("button", {
@@ -28,13 +30,15 @@ export function Button({
     loading?: boolean;
   }) {
   const Comp = asChild ? Slot : "button";
+  const ready = useHydrated();
   return (
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size }), className)}
       {...props}
       data-loading={loading || undefined}
-      disabled={asChild ? undefined : disabled || loading}
+      data-hydrating={!ready || undefined}
+      disabled={asChild ? undefined : disabled || loading || !ready}
       aria-disabled={disabled || loading || undefined}
       aria-busy={loading || undefined}
       onClick={(e) => {
