@@ -35,7 +35,7 @@ GitHub Actions performs the same checks with read-only repository permissions, r
 
 ## Decisions
 
-Mobile CTAs use an explicit stacked layout, removing the old platform-dependent button wrapping. Chromium visual references are shared across Windows and Linux; inspect actual/diff artifacts before proposing any reference change. Browser-specific interaction checks complement these references.
+Mobile CTAs use an explicit stacked layout, removing the old platform-dependent button wrapping. Thirteen Chromium visual references are shared across Windows and Linux. The mobile onboarding pair and dark mobile homepage have separately reviewed references for native font/emoji rendering. Comparison tolerances stay unchanged; inspect actual/diff artifacts before proposing any reference change.
 
 - Keep a single frontend app with small components and pure calculation functions.
 - Store demonstration preferences locally; treat browser storage as untrusted input.
