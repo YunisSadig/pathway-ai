@@ -10,11 +10,13 @@ export function ProgramCard({
   profile,
   selected,
   onCompare,
+  compareDisabled = false,
 }: {
   program: Program;
   profile: Profile;
   selected?: boolean;
   onCompare?: () => void;
+  compareDisabled?: boolean;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const result = match(profile, p);
@@ -74,6 +76,7 @@ export function ProgramCard({
               <input
                 type="checkbox"
                 checked={!!selected}
+                disabled={compareDisabled}
                 onChange={onCompare}
               />
               Compare

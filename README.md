@@ -35,13 +35,14 @@ GitHub Actions performs the same checks with read-only repository permissions, r
 
 ## Decisions
 
-Mobile homepage screenshots use separate reviewed Windows and Linux references because native font metrics and flag emoji change wrapping at 375px. The other fourteen screenshots share references. Keep the same comparison tolerance on both platforms; inspect actual/diff artifacts before proposing changes.
+Mobile CTAs use an explicit stacked layout, removing the old platform-dependent button wrapping. Chromium visual references are shared across Windows and Linux; inspect actual/diff artifacts before proposing any reference change. Browser-specific interaction checks complement these references.
 
 - Keep a single frontend app with small components and pure calculation functions.
 - Store demonstration preferences locally; treat browser storage as untrusted input.
 - Separate fictional program data from UI for a future Spring Boot API adapter.
 - Do not present matching scores as admission chances or simulated advisor text as AI advice.
 - CI validates changes; deployment is intentionally absent.
+- Interaction tokens live in `app/interactions.css`: 150ms press/hover, 180ms menus, 240ms assessment movement, and 280ms surface entrances. CSS handles simple feedback; Motion handles assessment and scenario layout. Reduced-motion and forced-colors fallbacks are explicit. Theme palettes switch atomically to retain contrast; only the menu/icon animate.
 - Demo fit index: 35% academic, 25% affordability, 15% lifestyle, 15% field relevance, 10% destination preference. Academic fit uses grade, IELTS, and an optional fictional SAT threshold. Grade conversion from 0–5 is a simple ×20 illustration, not a recognized credential equivalence. No index is an admission probability.
 - Year-one cost = tuition + 12 × (rent + food + transport) + insurance + setup + adjustable contingency. No scholarships or employment income are assumed.
 - Academic/cost/scenario functions live in `lib/planning.ts`, fictional records in `lib/programs.ts`, and profile validation/decoding in `lib/profile.ts`. Replace these boundaries with verified, timestamped API data when a backend is introduced.

@@ -41,6 +41,7 @@ export function Onboarding() {
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [storageError, setStorageError] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
+  const resetDialog = useRef<HTMLDialogElement>(null);
   const previousStep = useRef(step);
   const router = useRouter();
   useEffect(() => {
@@ -201,7 +202,13 @@ export function Onboarding() {
                   : "Preparation takes time. It’s okay to have a few unknowns."}
         </p>
         <form noValidate onSubmit={next}>
-          <div className="form-grid" key={step}>
+          <motion.div
+            className="form-grid"
+            key={step}
+            initial={{ x: 8 }}
+            animate={{ x: 0 }}
+            transition={{ duration: 0.24, ease: [0.2, 0.8, 0.2, 1] }}
+          >
             {step === 0 && (
               <>
                 <Field
@@ -416,7 +423,7 @@ export function Onboarding() {
                 </div>
               </>
             )}
-          </div>
+          </motion.div>
           {Object.keys(errors).some((k) => errors[k as keyof Profile]) && (
             <p role="alert" className="field-error form-summary">
               Please check the highlighted answers.
@@ -448,19 +455,50 @@ export function Onboarding() {
         </form>
         <button
           className="reset-link"
-          onClick={() => {
-            if (
-              window.confirm(
-                "Clear this browser’s demo assessment and saved plans?",
-              )
-            ) {
-              update(initialState);
-              setErrors({});
-            }
-          }}
+          type="button"
+          aria-haspopup="dialog"
+          onClick={() => resetDialog.current?.showModal()}
         >
           <RotateCcw size={12} /> Start fresh
         </button>
+        <dialog
+          ref={resetDialog}
+          className="program-dialog reset-dialog"
+          aria-labelledby="reset-title"
+          aria-describedby="reset-description"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) resetDialog.current?.close();
+          }}
+        >
+          <span className="eyebrow">A FRESH START</span>
+          <h2 id="reset-title">Clear this demo profile?</h2>
+          <p id="reset-description">
+            This removes your assessment answers, preparation goals, and pathway
+            choices from this browser. Your appearance preference stays the
+            same.
+          </p>
+          <div className="dialog-actions">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => resetDialog.current?.close()}
+            >
+              Keep my progress
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => {
+                update(initialState);
+                setErrors({});
+                resetDialog.current?.close();
+                requestAnimationFrame(() => heading.current?.focus());
+              }}
+            >
+              Clear demo profile
+            </Button>
+          </div>
+        </dialog>
       </section>
     </main>
   );

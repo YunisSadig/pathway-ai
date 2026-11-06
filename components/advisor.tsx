@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "motion/react";
 import { ArrowUpRight, MessageCircle, Send } from "lucide-react";
 import Link from "next/link";
 import { Workspace, PageIntro } from "@/components/workspace";
@@ -10,6 +11,16 @@ export function Advisor() {
   const { state } = useProfile();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const log = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const reduced = useReducedMotion();
+  useEffect(() => {
+    if (messages.length)
+      log.current?.scrollTo({
+        top: log.current.scrollHeight,
+        behavior: reduced ? "instant" : "smooth",
+      });
+  }, [messages.length, reduced]);
   function send(text: string) {
     if (!text.trim()) return;
     const lower = text.toLowerCase();
@@ -26,6 +37,9 @@ export function Advisor() {
       { role: "advisor", text: reply },
     ]);
     setInput("");
+    requestAnimationFrame(() =>
+      inputRef.current?.focus({ preventScroll: true }),
+    );
   }
   return (
     <Workspace>
@@ -48,6 +62,7 @@ export function Advisor() {
           </div>
           <div
             className="chat-messages"
+            ref={log}
             role="log"
             aria-label="Scripted advisor conversation"
             aria-live="polite"
@@ -96,6 +111,7 @@ export function Advisor() {
             </label>
             <input
               id="advisor-message"
+              ref={inputRef}
               placeholder="Ask a demo question…"
               maxLength={500}
               value={input}
