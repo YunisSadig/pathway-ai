@@ -120,6 +120,9 @@ export function Explorer() {
               profile={p}
               selected={selected.includes(program.id)}
               onCompare={() => toggle(program.id)}
+              compareDisabled={
+                selected.length === 3 && !selected.includes(program.id)
+              }
             />
           ))}
         </div>
@@ -142,86 +145,124 @@ export function Explorer() {
         </section>
       )}
       {selected.length > 0 && (
-        <section className="comparison panel" aria-label="Program comparison">
-          <div className="content-heading">
-            <div>
-              <h2>Side by side. A clearer picture.</h2>
-              <p className="muted">
-                {selected.length}/3 selected. Choose at least two to compare.
-              </p>
-            </div>
+        <>
+          <div className="compare-dock">
+            <span aria-live="polite">
+              {selected.length} of 3 programs selected
+            </span>
             <Button
-              variant="ghost"
               size="small"
+              disabled={selected.length < 2}
+              onClick={() => {
+                const target = document.getElementById("program-comparison");
+                target?.scrollIntoView({
+                  behavior: window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                  ).matches
+                    ? "instant"
+                    : "smooth",
+                  block: "start",
+                });
+                target?.focus({ preventScroll: true });
+              }}
+            >
+              Compare programs
+            </Button>
+            <button
+              type="button"
+              className="icon-button"
+              aria-label="Clear comparison selection"
               onClick={() => setSelected([])}
             >
-              Clear <X size={14} />
-            </Button>
+              <X size={16} />
+            </button>
           </div>
-          {selected.length >= 2 && (
-            <div className="table-scroll">
-              <table>
-                <caption className="sr-only">
-                  Fictional program comparison
-                </caption>
-                <thead>
-                  <tr>
-                    <th scope="col">What matters</th>
-                    {compared.map((x) => (
-                      <th key={x.id} scope="col">
-                        {x.university}
-                        <small>{x.title}</small>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    [
-                      "Year-one total",
-                      ...compared.map((x) => euro(costs(x).total)),
-                    ],
-                    [
-                      "Academic fit",
-                      ...compared.map((x) => `${match(p, x).academic}/100`),
-                    ],
-                    [
-                      "Affordability",
-                      ...compared.map(
-                        (x) => `${match(p, x).affordability}/100`,
-                      ),
-                    ],
-                    [
-                      "Lifestyle fit",
-                      ...compared.map((x) => `${match(p, x).lifestyle}/100`),
-                    ],
-                    [
-                      "Career relevance",
-                      ...compared.map((x) => `${match(p, x).career}/100`),
-                    ],
-                    [
-                      "Illustrative IELTS",
-                      ...compared.map((x) => x.ielts.toFixed(1)),
-                    ],
-                    ["Learning style", ...compared.map((x) => x.teaching)],
-                  ].map(([label, ...values]) => (
-                    <tr key={label}>
-                      <th scope="row">{label}</th>
-                      {values.map((v, i) => (
-                        <td key={i}>{v}</td>
+          <section
+            className="comparison panel"
+            id="program-comparison"
+            tabIndex={-1}
+            aria-label="Program comparison"
+          >
+            <div className="content-heading">
+              <div>
+                <h2>Side by side. A clearer picture.</h2>
+                <p className="muted">
+                  {selected.length}/3 selected. Choose at least two to compare.
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="small"
+                onClick={() => setSelected([])}
+              >
+                Clear <X size={14} />
+              </Button>
+            </div>
+            {selected.length >= 2 && (
+              <div className="table-scroll">
+                <table>
+                  <caption className="sr-only">
+                    Fictional program comparison
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">What matters</th>
+                      {compared.map((x) => (
+                        <th key={x.id} scope="col">
+                          {x.university}
+                          <small>{x.title}</small>
+                        </th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-          {selected.length === 3 && (
-            <p className="field-hint">
-              Comparison is full. Uncheck a program to add another.
-            </p>
-          )}
-        </section>
+                  </thead>
+                  <tbody>
+                    {[
+                      [
+                        "Year-one total",
+                        ...compared.map((x) => euro(costs(x).total)),
+                      ],
+                      [
+                        "Academic fit",
+                        ...compared.map((x) => `${match(p, x).academic}/100`),
+                      ],
+                      [
+                        "Affordability",
+                        ...compared.map(
+                          (x) => `${match(p, x).affordability}/100`,
+                        ),
+                      ],
+                      [
+                        "Lifestyle fit",
+                        ...compared.map((x) => `${match(p, x).lifestyle}/100`),
+                      ],
+                      [
+                        "Career relevance",
+                        ...compared.map((x) => `${match(p, x).career}/100`),
+                      ],
+                      [
+                        "Illustrative IELTS",
+                        ...compared.map((x) => x.ielts.toFixed(1)),
+                      ],
+                      ["Learning style", ...compared.map((x) => x.teaching)],
+                    ].map(([label, ...values]) => (
+                      <tr key={label}>
+                        <th scope="row">{label}</th>
+                        {values.map((v, i) => (
+                          <td key={i}>{v}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {selected.length === 3 && (
+              <p className="field-hint">
+                Comparison is full. Uncheck a program to add another.
+              </p>
+            )}
+          </section>
+        </>
       )}
     </Workspace>
   );

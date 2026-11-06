@@ -7,8 +7,9 @@ const buttonVariants = cva("button", {
       default: "button-primary",
       outline: "button-outline",
       ghost: "button-ghost",
+      destructive: "button-destructive",
     },
-    size: { default: "", small: "button-small" },
+    size: { default: "", small: "button-small", icon: "button-icon" },
   },
   defaultVariants: { variant: "default", size: "default" },
 });
@@ -17,15 +18,33 @@ export function Button({
   variant,
   size,
   asChild = false,
+  loading = false,
+  disabled,
+  onClick,
   ...props
 }: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+    loading?: boolean;
+  }) {
   const Comp = asChild ? Slot : "button";
   return (
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size }), className)}
       {...props}
+      data-loading={loading || undefined}
+      disabled={asChild ? undefined : disabled || loading}
+      aria-disabled={disabled || loading || undefined}
+      aria-busy={loading || undefined}
+      onClick={(e) => {
+        if (disabled || loading) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        onClick?.(e);
+      }}
     />
   );
 }

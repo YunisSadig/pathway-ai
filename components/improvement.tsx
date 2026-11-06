@@ -68,6 +68,11 @@ function Lab({ profile: p }: { profile: Profile }) {
             </span>
             <input
               aria-label="SAT target"
+              aria-valuetext={
+                sat
+                  ? `${sat} points`
+                  : "No SAT planned. Move the slider to choose a target."
+              }
               type="range"
               min={400}
               max={1600}
