@@ -7,7 +7,13 @@ export default function UniversitiesPage() {
   return (
     <ComingSoon
       title="Universities"
-      description="A directory of real universities across the EU, United States, Canada, China, South Korea and Japan, with every fact marked verified or unknown."
+      description="A directory of real universities across the EU, United States, Canada, China, South Korea and Japan."
+      planned={[
+        "Search by name, city, country and subject",
+        "A profile page for every university, with source links",
+        "Every fact marked verified or not verified",
+        "Save and compare universities",
+      ]}
     />
   );
 }

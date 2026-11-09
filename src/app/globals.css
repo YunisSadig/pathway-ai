@@ -134,6 +134,59 @@
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/*
+ * Shared layout and type utilities. Every page uses these so widths, section
+ * rhythm and heading scale stay consistent.
+ * Radii: cards = xl, nested items = lg, controls = lg.
+ * Shadows: cards use sm; only floating layers (menus, hero preview) use md/lg.
+ */
+@utility page-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-inline: 1rem;
+  @media (min-width: 40rem) {
+    padding-inline: 1.5rem;
+  }
+}
+@utility section-y {
+  padding-block: 3.5rem;
+  @media (min-width: 64rem) {
+    padding-block: 5rem;
+  }
+}
+@utility card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+@utility title-hero {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 1.6rem + 4.2vw, 4.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+@utility title-section {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+@utility title-page {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.75rem);
+  line-height: 1.12;
+  text-wrap: balance;
+}
+@utility measure {
+  max-width: 60ch;
+}
+
 @layer base {
   * {
     border-color: var(--border);
@@ -194,6 +247,22 @@ body {
   }
   to {
     transform: none;
+  }
+}
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes slide-out {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(100%);
   }
 }
 @keyframes menu-out {
