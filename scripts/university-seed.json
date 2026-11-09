@@ -1,0 +1,380 @@
+[
+  [
+    "Technical University of Munich",
+    "Germany",
+    "EU",
+    "Munich",
+    "https://www.tum.de/en/"
+  ],
+  [
+    "Ludwig Maximilian University of Munich",
+    "Germany",
+    "EU",
+    "Munich",
+    "https://www.lmu.de/en/"
+  ],
+  [
+    "Heidelberg University",
+    "Germany",
+    "EU",
+    "Heidelberg",
+    "https://www.uni-heidelberg.de/en"
+  ],
+  [
+    "RWTH Aachen University",
+    "Germany",
+    "EU",
+    "Aachen",
+    "https://www.rwth-aachen.de/go/id/a/?lidx=1"
+  ],
+  [
+    "Technische Universität Berlin",
+    "Germany",
+    "EU",
+    "Berlin",
+    "https://www.tu.berlin/en/"
+  ],
+  [
+    "University of Freiburg",
+    "Germany",
+    "EU",
+    "Freiburg",
+    "https://uni-freiburg.de/en/"
+  ],
+  [
+    "Delft University of Technology",
+    "Netherlands",
+    "EU",
+    "Delft",
+    "https://www.tudelft.nl/en"
+  ],
+  [
+    "University of Amsterdam",
+    "Netherlands",
+    "EU",
+    "Amsterdam",
+    "https://www.uva.nl/en"
+  ],
+  [
+    "Utrecht University",
+    "Netherlands",
+    "EU",
+    "Utrecht",
+    "https://www.uu.nl/en"
+  ],
+  [
+    "Eindhoven University of Technology",
+    "Netherlands",
+    "EU",
+    "Eindhoven",
+    "https://www.tue.nl/en/"
+  ],
+  [
+    "University of Groningen",
+    "Netherlands",
+    "EU",
+    "Groningen",
+    "https://www.rug.nl/"
+  ],
+  [
+    "Sorbonne University",
+    "France",
+    "EU",
+    "Paris",
+    "https://www.sorbonne-universite.fr/en"
+  ],
+  [
+    "Université Paris-Saclay",
+    "France",
+    "EU",
+    "Gif-sur-Yvette",
+    "https://www.universite-paris-saclay.fr/en"
+  ],
+  ["Politecnico di Milano", "Italy", "EU", "Milan", "https://www.polimi.it/en"],
+  [
+    "University of Bologna",
+    "Italy",
+    "EU",
+    "Bologna",
+    "https://www.unibo.it/en"
+  ],
+  [
+    "Ca' Foscari University of Venice",
+    "Italy",
+    "EU",
+    "Venice",
+    "https://www.unive.it/"
+  ],
+  [
+    "Complutense University of Madrid",
+    "Spain",
+    "EU",
+    "Madrid",
+    "https://www.ucm.es/english"
+  ],
+  [
+    "KTH Royal Institute of Technology",
+    "Sweden",
+    "EU",
+    "Stockholm",
+    "https://www.kth.se/en"
+  ],
+  [
+    "Lund University",
+    "Sweden",
+    "EU",
+    "Lund",
+    "https://www.lunduniversity.lu.se/"
+  ],
+  [
+    "University of Helsinki",
+    "Finland",
+    "EU",
+    "Helsinki",
+    "https://www.helsinki.fi/en"
+  ],
+  ["Aalto University", "Finland", "EU", "Espoo", "https://www.aalto.fi/en"],
+  [
+    "University of Copenhagen",
+    "Denmark",
+    "EU",
+    "Copenhagen",
+    "https://www.ku.dk/english/"
+  ],
+  [
+    "Technical University of Denmark",
+    "Denmark",
+    "EU",
+    "Kongens Lyngby",
+    "https://www.dtu.dk/english"
+  ],
+  ["TU Wien", "Austria", "EU", "Vienna", "https://www.tuwien.at/en/"],
+  [
+    "University of Vienna",
+    "Austria",
+    "EU",
+    "Vienna",
+    "https://www.univie.ac.at/en/"
+  ],
+  ["University of Warsaw", "Poland", "EU", "Warsaw", "https://www.uw.edu.pl/"],
+  [
+    "Jagiellonian University",
+    "Poland",
+    "EU",
+    "Kraków",
+    "https://en.uj.edu.pl/"
+  ],
+  [
+    "Charles University",
+    "Czechia",
+    "EU",
+    "Prague",
+    "https://cuni.cz/UKEN-1.html"
+  ],
+  [
+    "Budapest University of Technology and Economics",
+    "Hungary",
+    "EU",
+    "Budapest",
+    "https://www.bme.hu/?language=en"
+  ],
+  ["Ghent University", "Belgium", "EU", "Ghent", "https://www.ugent.be/en"],
+  ["Trinity College Dublin", "Ireland", "EU", "Dublin", "https://www.tcd.ie/"],
+  [
+    "Massachusetts Institute of Technology",
+    "United States",
+    "US",
+    "Cambridge, MA",
+    "https://www.mit.edu/"
+  ],
+  [
+    "Stanford University",
+    "United States",
+    "US",
+    "Stanford, CA",
+    "https://www.stanford.edu/"
+  ],
+  [
+    "University of California, Berkeley",
+    "United States",
+    "US",
+    "Berkeley, CA",
+    "https://www.berkeley.edu/"
+  ],
+  [
+    "University of Washington",
+    "United States",
+    "US",
+    "Seattle, WA",
+    "https://www.washington.edu/"
+  ],
+  [
+    "Georgia Institute of Technology",
+    "United States",
+    "US",
+    "Atlanta, GA",
+    "https://www.gatech.edu/"
+  ],
+  [
+    "Purdue University",
+    "United States",
+    "US",
+    "West Lafayette, IN",
+    "https://www.purdue.edu/"
+  ],
+  [
+    "Arizona State University",
+    "United States",
+    "US",
+    "Tempe, AZ",
+    "https://www.asu.edu/"
+  ],
+  [
+    "University of Texas at Austin",
+    "United States",
+    "US",
+    "Austin, TX",
+    "https://www.utexas.edu/"
+  ],
+  [
+    "Pennsylvania State University",
+    "United States",
+    "US",
+    "University Park, PA",
+    "https://www.psu.edu/"
+  ],
+  [
+    "Northeastern University",
+    "United States",
+    "US",
+    "Boston, MA",
+    "https://www.northeastern.edu/"
+  ],
+  [
+    "University of Illinois Urbana-Champaign",
+    "United States",
+    "US",
+    "Urbana, IL",
+    "https://illinois.edu/"
+  ],
+  [
+    "University of British Columbia",
+    "Canada",
+    "CA",
+    "Vancouver",
+    "https://www.ubc.ca/"
+  ],
+  ["McGill University", "Canada", "CA", "Montréal", "https://www.mcgill.ca/"],
+  [
+    "University of Waterloo",
+    "Canada",
+    "CA",
+    "Waterloo",
+    "https://uwaterloo.ca/"
+  ],
+  [
+    "University of Alberta",
+    "Canada",
+    "CA",
+    "Edmonton",
+    "https://www.ualberta.ca/en/index.html"
+  ],
+  [
+    "McMaster University",
+    "Canada",
+    "CA",
+    "Hamilton",
+    "https://www.mcmaster.ca/"
+  ],
+  ["Simon Fraser University", "Canada", "CA", "Burnaby", "https://www.sfu.ca/"],
+  [
+    "Tsinghua University",
+    "China",
+    "CN",
+    "Beijing",
+    "https://www.tsinghua.edu.cn/en/"
+  ],
+  [
+    "Peking University",
+    "China",
+    "CN",
+    "Beijing",
+    "https://english.pku.edu.cn/"
+  ],
+  [
+    "Zhejiang University",
+    "China",
+    "CN",
+    "Hangzhou",
+    "https://www.zju.edu.cn/english/"
+  ],
+  [
+    "Fudan University",
+    "China",
+    "CN",
+    "Shanghai",
+    "https://www.fudan.edu.cn/en/"
+  ],
+  [
+    "Shanghai Jiao Tong University",
+    "China",
+    "CN",
+    "Shanghai",
+    "https://en.sjtu.edu.cn/"
+  ],
+  ["Wuhan University", "China", "CN", "Wuhan", "https://en.whu.edu.cn/"],
+  [
+    "Seoul National University",
+    "South Korea",
+    "KR",
+    "Seoul",
+    "https://en.snu.ac.kr/"
+  ],
+  [
+    "Yonsei University",
+    "South Korea",
+    "KR",
+    "Seoul",
+    "https://www.yonsei.ac.kr/"
+  ],
+  [
+    "Korea University",
+    "South Korea",
+    "KR",
+    "Seoul",
+    "https://www.korea.edu/sites/en/index.do"
+  ],
+  ["POSTECH", "South Korea", "KR", "Pohang", "https://www.postech.ac.kr/eng/"],
+  [
+    "Sungkyunkwan University",
+    "South Korea",
+    "KR",
+    "Seoul",
+    "https://www.skku.edu/eng/"
+  ],
+  [
+    "Ewha Womans University",
+    "South Korea",
+    "KR",
+    "Seoul",
+    "https://www.ewha.ac.kr/ewhaen/"
+  ],
+  [
+    "The University of Tokyo",
+    "Japan",
+    "JP",
+    "Tokyo",
+    "https://www.u-tokyo.ac.jp/en/"
+  ],
+  ["Kyoto University", "Japan", "JP", "Kyoto", "https://www.kyoto-u.ac.jp/en"],
+  ["Osaka University", "Japan", "JP", "Osaka", "https://www.osaka-u.ac.jp/en"],
+  [
+    "Tohoku University",
+    "Japan",
+    "JP",
+    "Sendai",
+    "https://www.tohoku.ac.jp/en/"
+  ],
+  ["Waseda University", "Japan", "JP", "Tokyo", "https://www.waseda.jp/top/en"],
+  ["Nagoya University", "Japan", "JP", "Nagoya", "https://en.nagoya-u.ac.jp/"]
+]
