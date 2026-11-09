@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/coming-soon";
+import { Suspense } from "react";
+import { Explorer } from "@/components/universities/explorer";
+import { UNIVERSITIES } from "@/data/universities";
 
 export const metadata: Metadata = { title: "Universities" };
 
 export default function UniversitiesPage() {
   return (
-    <ComingSoon
-      title="Universities"
-      description="A directory of real universities across the EU, United States, Canada, China, South Korea and Japan."
-      planned={[
-        "Search by name, city, country and subject",
-        "A profile page for every university, with source links",
-        "Every fact marked verified or not verified",
-        "Save and compare universities",
-      ]}
-    />
+    <section className="page-container section-y">
+      <h1 className="title-page">Universities</h1>
+      <p className="mt-3 measure text-lg text-muted-foreground">
+        {UNIVERSITIES.length} real universities across the EU, United States,
+        Canada, China, South Korea and Japan. For now each entry confirms the
+        institution and its official website. Programs, fees and requirements
+        are not yet assessed, and are marked as such.
+      </p>
+      <div className="mt-8">
+        <Suspense
+          fallback={
+            <p className="text-muted-foreground">Loading universities…</p>
+          }
+        >
+          <Explorer />
+        </Suspense>
+      </div>
+    </section>
   );
 }
