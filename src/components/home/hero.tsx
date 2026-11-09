@@ -56,7 +56,7 @@ export function Hero() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg">
-              <Link href="/assessment">Build my pathway</Link>
+              <Link href="/onboarding">Build my pathway</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link href="/universities">Explore universities</Link>

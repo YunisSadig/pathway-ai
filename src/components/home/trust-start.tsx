@@ -34,7 +34,7 @@ export function TrustStart() {
             size="lg"
             className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
           >
-            <Link href="/assessment">Build my pathway</Link>
+            <Link href="/onboarding">Build my pathway</Link>
           </Button>
           <Button
             asChild

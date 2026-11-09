@@ -41,7 +41,7 @@ export default function HowItWorksPage() {
         ))}
       </ol>
       <Button asChild size="lg" className="mt-8">
-        <Link href="/assessment">Build my pathway</Link>
+        <Link href="/onboarding">Build my pathway</Link>
       </Button>
     </section>
   );

@@ -8,7 +8,7 @@ test("hero shows the headline and both calls to action", async ({ page }) => {
   );
   await expect(
     page.getByRole("link", { name: "Build my pathway" }).first(),
-  ).toHaveAttribute("href", "/assessment");
+  ).toHaveAttribute("href", "/onboarding");
   await expect(
     page.getByRole("link", { name: "Explore universities" }).first(),
   ).toHaveAttribute("href", "/universities");

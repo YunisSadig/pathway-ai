@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import { Dialog } from "radix-ui";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { Dialog, DropdownMenu } from "radix-ui";
 import { useState } from "react";
-import { PUBLIC_NAV, SITE } from "@/lib/site";
+import { PUBLIC_NAV, SITE, WORKSPACE_NAV, type NavItem } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "./theme-switcher";
 
@@ -27,10 +27,12 @@ export function Logo() {
 }
 
 function NavLinks({
+  items = PUBLIC_NAV,
   onNavigate,
   className,
   linkClassName,
 }: {
+  items?: NavItem[];
   onNavigate?: () => void;
   className?: string;
   linkClassName?: string;
@@ -38,7 +40,7 @@ function NavLinks({
   const pathname = usePathname();
   return (
     <ul className={className}>
-      {PUBLIC_NAV.map((item) => {
+      {items.map((item) => {
         const active =
           item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
         return (
@@ -61,6 +63,38 @@ function NavLinks({
   );
 }
 
+function WorkspaceMenu() {
+  const pathname = usePathname();
+  return (
+    <div className="hidden md:block">
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-border bg-surface px-3 text-sm font-semibold transition-colors hover:bg-hover">
+          My workspace <ChevronDown aria-hidden className="size-4" />
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content
+            align="end"
+            sideOffset={6}
+            className="z-50 min-w-52 rounded-xl border border-border bg-elevated p-1.5 shadow-lg data-[state=closed]:animate-[menu-out_100ms_ease-in_forwards] data-[state=open]:animate-[menu-in_140ms_ease-out]"
+          >
+            {WORKSPACE_NAV.map((item) => (
+              <DropdownMenu.Item key={item.href} asChild>
+                <Link
+                  href={item.href}
+                  aria-current={pathname === item.href ? "page" : undefined}
+                  className="flex min-h-10 items-center rounded-lg px-3 text-sm font-medium outline-none aria-[current=page]:bg-selected aria-[current=page]:font-semibold data-[highlighted]:bg-hover"
+                >
+                  {item.label}
+                </Link>
+              </DropdownMenu.Item>
+            ))}
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
+    </div>
+  );
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
@@ -70,6 +104,7 @@ export function SiteHeader() {
         <nav aria-label="Main" className="hidden md:block">
           <NavLinks className="flex items-center gap-1" />
         </nav>
+        <WorkspaceMenu />
         <div className="flex items-center gap-2">
           <ThemeSwitcher />
           <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -96,8 +131,20 @@ export function SiteHeader() {
                     <X className="size-5" aria-hidden />
                   </Dialog.Close>
                 </div>
-                <nav aria-label="Mobile">
+                <nav
+                  aria-label="Mobile"
+                  className="-mr-2 flex flex-col gap-4 overflow-y-auto pr-2"
+                >
                   <NavLinks
+                    onNavigate={() => setOpen(false)}
+                    className="flex flex-col gap-1"
+                    linkClassName="flex min-h-11 items-center px-3 text-base"
+                  />
+                  <p className="border-t border-border px-3 pt-4 text-sm font-semibold text-muted-foreground">
+                    My workspace
+                  </p>
+                  <NavLinks
+                    items={WORKSPACE_NAV}
                     onNavigate={() => setOpen(false)}
                     className="flex flex-col gap-1"
                     linkClassName="flex min-h-11 items-center px-3 text-base"

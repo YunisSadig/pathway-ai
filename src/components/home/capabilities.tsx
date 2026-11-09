@@ -60,9 +60,11 @@ function Panel({
   title,
   body,
   footer,
+  badge,
   children,
 }: {
   title: string;
+  badge?: string;
   body: string;
   footer?: React.ReactNode;
   children: React.ReactNode;
@@ -72,7 +74,9 @@ function Panel({
       <div className="flex flex-col">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="text-2xl font-extrabold">{title}</h3>
-          <StatusBadge status="unknown">In development</StatusBadge>
+          {badge ? (
+            <StatusBadge status="hypothetical">{badge}</StatusBadge>
+          ) : null}
         </div>
         <p className="mt-3 text-muted-foreground">{body}</p>
         {footer ? <div className="mt-auto pt-6">{footer}</div> : null}
@@ -134,6 +138,11 @@ function ScholarshipsPanel() {
     <Panel
       title="Scholarships, with the fine print first"
       body="Many programs are for master's students only, or need a nomination. Each entry says who it is for, so you do not spend weeks on one you cannot apply for."
+      footer={
+        <Button asChild>
+          <Link href="/scholarships">Browse scholarships</Link>
+        </Button>
+      }
     >
       <dl className="divide-y divide-border">
         {SCHOLARSHIP_FIELDS.map(([term, detail]) => (
@@ -160,6 +169,7 @@ function FitPanel() {
   return (
     <Panel
       title="Eligibility, money and goals, kept apart"
+      badge="Interactive example"
       body="A university can fit your grades and still miss your budget, so there is no single score. Each question gets its own answer, and when requirements are not verified the answer is unknown. We do not publish admission probabilities."
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -236,7 +246,7 @@ function PlanPanel() {
       body="Set a main route with its milestones, then see what changes when a deadline, budget or qualification does."
       footer={
         <Button asChild>
-          <Link href="/assessment">Build my pathway</Link>
+          <Link href="/onboarding">Build my pathway</Link>
         </Button>
       }
     >
