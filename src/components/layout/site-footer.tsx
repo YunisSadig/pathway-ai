@@ -12,7 +12,7 @@ export function SiteFooter() {
           </p>
         </div>
         <nav aria-label="Footer">
-          <ul className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
+          <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm sm:gap-x-6">
             {NAV.map((item) => (
               <li key={item.href}>
                 <Link

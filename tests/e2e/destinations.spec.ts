@@ -108,24 +108,14 @@ test("country selection works with the keyboard", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("scholarships: level and destination choices, then clear", async ({
+test("scholarships: honest empty state with no dead filters", async ({
   page,
 }) => {
   await page.goto("/scholarships");
   await expect(
     page.getByText("Scholarship listings aren't available yet."),
   ).toBeVisible();
-  await page.getByRole("link", { name: "Master's" }).click();
-  await expect(page).toHaveURL(/level=master/);
-  await page.getByRole("link", { name: "European Union" }).click();
-  await expect(page).toHaveURL(/region=eu/);
-  await page.getByRole("link", { name: /Germany/ }).click();
-  await expect(page).toHaveURL(/level=master/);
-  await expect(
-    page.getByText(
-      "Scholarship listings for Master's study in Germany aren't available yet.",
-    ),
-  ).toBeVisible();
-  await page.getByRole("link", { name: "Clear all choices" }).click();
-  await expect(page).toHaveURL(/\/scholarships$/);
+  await expect(page.getByRole("link", { name: "Master's" })).toHaveCount(0);
+  await page.getByRole("link", { name: "Browse universities" }).click();
+  await expect(page).toHaveURL(/\/universities$/);
 });

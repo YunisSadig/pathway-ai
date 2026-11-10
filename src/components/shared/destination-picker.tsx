@@ -36,8 +36,6 @@ export function DestinationPicker({ basePath }: { basePath: string }) {
 
   const href = (next: { region?: string; country?: string }) => {
     const q = new URLSearchParams();
-    const level = params.get("level");
-    if (level) q.set("level", level);
     if (next.region) q.set("region", next.region);
     if (next.country) q.set("country", next.country);
     const s = q.toString();

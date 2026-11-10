@@ -99,3 +99,12 @@ test("unknown route shows the custom 404 with working links", async ({
   await page.getByRole("link", { name: "Back to home" }).click();
   await expect(page).toHaveURL("/");
 });
+
+test("how it works lists five steps and marks only one as available", async ({
+  page,
+}) => {
+  await page.goto("/how-it-works");
+  await expect(page.locator("main ol > li")).toHaveCount(5);
+  await expect(page.getByText("Available now")).toHaveCount(1);
+  await expect(page.getByText("Planned")).toHaveCount(3);
+});

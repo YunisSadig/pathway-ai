@@ -85,7 +85,6 @@ for (const scheme of ["light", "dark"] as const) {
   for (const path of [
     ...NAV.map((n) => n.href),
     "/universities?region=eu&country=poland",
-    "/scholarships?level=master&region=eu",
   ]) {
     test(`no axe violations on ${path} (${scheme})`, async ({ page }) => {
       await page.emulateMedia({ colorScheme: scheme });
