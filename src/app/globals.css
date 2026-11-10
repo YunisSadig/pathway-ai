@@ -34,11 +34,6 @@
   --warning-soft: #fef0c7;
   --danger: #b42318;
   --danger-soft: #fee4e2;
-  --chart-1: #4f46e5;
-  --chart-2: #0d9488;
-  --chart-3: #e8624a;
-  --chart-4: #b7791f;
-  --chart-5: #7c3aed;
   --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.06);
   --shadow-md: 0 8px 24px -8px rgb(16 24 40 / 0.14);
   --shadow-lg: 0 24px 48px -16px rgb(16 24 40 / 0.2);
@@ -75,11 +70,6 @@
   --warning-soft: #3d2a05;
   --danger: #fda29b;
   --danger-soft: #451512;
-  --chart-1: #a5b4fc;
-  --chart-2: #5eead4;
-  --chart-3: #ff9f86;
-  --chart-4: #fcd34d;
-  --chart-5: #c4b5fd;
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-md: 0 8px 24px -8px rgb(0 0 0 / 0.55);
   --shadow-lg: 0 24px 48px -16px rgb(0 0 0 / 0.65);
@@ -115,22 +105,14 @@
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
   --radius-xl: calc(var(--radius) + 6px);
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
   --font-display:
     var(--font-manrope), var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 

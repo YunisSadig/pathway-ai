@@ -74,6 +74,17 @@ export function resolveSelection(
 export const regionName = (id: RegionId) =>
   REGIONS.find((r) => r.id === id)?.name ?? id;
 
+/** Display name for an ISO 3166-1 alpha-2 code. Falls back to the code itself. */
+export function countryName(code: string): string {
+  const upper = code.toUpperCase();
+  return (
+    EU_COUNTRIES.find((c) => c.code === upper)?.name ??
+    REGIONS.find((r) => !r.multiCountry && r.id === upper.toLowerCase())
+      ?.name ??
+    upper
+  );
+}
+
 /** Human label for the current selection, or null when nothing is selected. */
 export function selectionLabel({ region, country }: Selection): string | null {
   return country?.name ?? region?.name ?? null;

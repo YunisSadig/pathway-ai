@@ -44,7 +44,13 @@ Pathway AI is split into two independent repositories:
 | `YunisSadig/pathway-ai-frontend` (this one) | Web UI: pages, navigation, theming, accessibility, tests | Four-page foundation complete |
 | `YunisSadig/pathway-ai-backend`             | Data and APIs: Java 21+, Spring Boot, PostgreSQL, REST   | Planned. Not created yet      |
 
-This repository contains no backend code, database client or API client. When the backend exists, the frontend will consume its REST API; until then there is no data in the app.
+This repository contains no backend code or database client. When the backend exists, the frontend will consume its REST API; until then there is no data in the app.
+
+### Prepared for the backend (not wired to any page)
+
+- `src/types`: contracts for `University`, `DegreeProgram`, `Scholarship` and `Page<T>` (field names mirror Spring Data's `Page`). Every record carries `sourceUrl`, `checkedAt` and `verification`.
+- `src/lib/api`: a small typed `apiGet` over `fetch`, plus list and detail functions. It reads `NEXT_PUBLIC_API_BASE_URL` and throws `ApiError` when it is unset, so nothing is requested today.
+- `src/components`: `UniversityList`/`UniversityCard` and `ScholarshipList`/`ScholarshipCard` take API data as props; `LoadingState`, `EmptyState` and `ErrorState` cover the other cases. No pages use them until real data exists.
 
 ## Getting started
 
