@@ -1,5 +1,5 @@
 {
-  "name": "pathway-ai",
+  "name": "pathway-ai-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,6 @@
     "check": "npm run format:check && npm run lint && npm run typecheck && npm test"
   },
   "dependencies": {
-    "@hookform/resolvers": "^7.0.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.70.0",
@@ -25,9 +24,7 @@
     "radix-ui": "^1.8.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "react-hook-form": "^7.91.0",
-    "tailwind-merge": "^3.7.0",
-    "zod": "^4.6.7"
+    "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

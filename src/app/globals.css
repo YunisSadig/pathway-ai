@@ -34,11 +34,6 @@
   --warning-soft: #fef0c7;
   --danger: #b42318;
   --danger-soft: #fee4e2;
-  --chart-1: #4f46e5;
-  --chart-2: #0d9488;
-  --chart-3: #e8624a;
-  --chart-4: #b7791f;
-  --chart-5: #7c3aed;
   --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.06);
   --shadow-md: 0 8px 24px -8px rgb(16 24 40 / 0.14);
   --shadow-lg: 0 24px 48px -16px rgb(16 24 40 / 0.2);
@@ -75,11 +70,6 @@
   --warning-soft: #3d2a05;
   --danger: #fda29b;
   --danger-soft: #451512;
-  --chart-1: #a5b4fc;
-  --chart-2: #5eead4;
-  --chart-3: #ff9f86;
-  --chart-4: #fcd34d;
-  --chart-5: #c4b5fd;
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-md: 0 8px 24px -8px rgb(0 0 0 / 0.55);
   --shadow-lg: 0 24px 48px -16px rgb(0 0 0 / 0.65);
@@ -115,23 +105,74 @@
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
   --radius-xl: calc(var(--radius) + 6px);
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
   --font-display:
     var(--font-manrope), var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+ * Shared layout and type utilities. Every page uses these so widths, section
+ * rhythm and heading scale stay consistent.
+ * Radii: cards = xl, nested items = lg, controls = lg.
+ * Shadows: cards use sm; only floating layers (menus, hero preview) use md/lg.
+ */
+@utility page-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 76rem;
+  padding-inline: 1rem;
+  @media (min-width: 40rem) {
+    padding-inline: 1.5rem;
+  }
+}
+@utility section-y {
+  padding-block: 3.5rem;
+  @media (min-width: 64rem) {
+    padding-block: 5rem;
+  }
+}
+@utility card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+@utility title-hero {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 1.6rem + 4.2vw, 4.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+@utility title-section {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+@utility title-page {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.75rem);
+  line-height: 1.12;
+  text-wrap: balance;
+}
+@utility eyebrow {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--primary-soft-foreground);
+}
+@utility measure {
+  max-width: 60ch;
 }
 
 @layer base {
@@ -170,6 +211,16 @@ body {
     color 200ms ease;
 }
 
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 @keyframes menu-in {
   from {
     opacity: 0;
@@ -194,6 +245,22 @@ body {
   }
   to {
     transform: none;
+  }
+}
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes slide-out {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(100%);
   }
 }
 @keyframes menu-out {

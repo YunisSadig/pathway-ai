@@ -50,6 +50,7 @@ for (const scheme of ["light", "dark"] as const) {
   test(`home has no axe violations (${scheme})`, async ({ page }) => {
     await page.emulateMedia({ colorScheme: scheme });
     await page.goto("/");
+    await page.waitForTimeout(1600); // let the hero entrance finish
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });

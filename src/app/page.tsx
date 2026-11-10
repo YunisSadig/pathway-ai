@@ -1,22 +1,104 @@
 import Link from "next/link";
+import { ArrowRight, Globe2, GraduationCap } from "lucide-react";
+import { Hero } from "@/components/home/hero";
 import { Button } from "@/components/ui/button";
-import { SITE } from "@/lib/site";
+import { StatusBadge } from "@/components/ui/status-badge";
 
-// Milestone A placeholder; the full homepage lands in Milestone B.
+const TODAY = [
+  {
+    title: "Universities",
+    body: "Browse by region, and by member state inside the European Union. Listings arrive once they are verified.",
+    href: "/universities",
+    cta: "Browse destinations",
+    Icon: Globe2,
+  },
+  {
+    title: "Scholarships",
+    body: "See what each scholarship entry will state, from eligibility to the official source.",
+    href: "/scholarships",
+    cta: "See what's coming",
+    Icon: GraduationCap,
+  },
+];
+
+const PLANNED = [
+  "Verified university and program information",
+  "A student profile with qualifications and budget",
+  "Comparing requirements and costs",
+  "A primary and a backup study plan",
+];
+
 export default function HomePage() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
-      <h1 className="max-w-3xl font-display text-4xl font-extrabold text-balance sm:text-6xl">
-        {SITE.tagline}
-      </h1>
-      <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-        {SITE.description}
-      </p>
-      <div className="mt-8 flex flex-wrap gap-3">
-        <Button asChild size="lg">
-          <Link href="/how-it-works">See how it works</Link>
-        </Button>
-      </div>
-    </section>
+    <>
+      <Hero />
+
+      <section
+        aria-labelledby="today-title"
+        className="border-y border-border bg-muted section-y"
+      >
+        <div className="page-container">
+          <h2 id="today-title" className="max-w-2xl title-section">
+            What you can do today
+          </h2>
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
+            {TODAY.map(({ title, body, href, cta, Icon }) => (
+              <Link
+                key={title}
+                href={href}
+                className="group flex flex-col card p-6 transition-[border-color,box-shadow] duration-150 hover:border-border-strong hover:shadow-md"
+              >
+                <span
+                  aria-hidden
+                  className="grid size-11 place-items-center rounded-lg bg-primary-soft text-primary-soft-foreground"
+                >
+                  <Icon className="size-5" />
+                </span>
+                <h3 className="mt-4 text-xl font-extrabold">{title}</h3>
+                <p className="mt-2 text-muted-foreground">{body}</p>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary-soft-foreground">
+                  {cta}
+                  <ArrowRight
+                    aria-hidden
+                    className="size-4 transition-transform duration-150 group-hover:translate-x-0.5"
+                  />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="planned-title"
+        className="page-container grid gap-8 section-y lg:grid-cols-[1fr_1.2fr] lg:gap-16"
+      >
+        <div>
+          <h2 id="planned-title" className="title-section">
+            Where Pathway AI is heading
+          </h2>
+          <p className="mt-3 measure text-muted-foreground">
+            The goal is to help you understand requirements, costs and
+            alternatives before you apply. These parts are not built yet.
+          </p>
+          <Button asChild variant="link" size="link" className="mt-2">
+            <Link href="/how-it-works">
+              See how it works <ArrowRight aria-hidden />
+            </Link>
+          </Button>
+        </div>
+        <ul className="divide-y divide-border border-y border-border">
+          {PLANNED.map((item) => (
+            <li
+              key={item}
+              className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-4"
+            >
+              <span className="font-semibold">{item}</span>
+              <StatusBadge status="hypothetical">Planned</StatusBadge>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </>
   );
 }
