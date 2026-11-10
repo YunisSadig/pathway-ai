@@ -13,7 +13,7 @@ export function EmptyState({
   return (
     <div
       role="status"
-      className="flex flex-col items-start gap-4 rounded-xl border border-dashed border-border-strong bg-surface p-6 sm:flex-row sm:p-8"
+      className="flex animate-[rise-in_240ms_var(--ease-out-soft)] flex-col items-start gap-4 rounded-xl border border-dashed border-border-strong bg-surface p-6 sm:flex-row sm:p-8"
     >
       <span
         aria-hidden

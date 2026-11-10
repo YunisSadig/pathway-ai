@@ -18,7 +18,7 @@ const STAGES: {
 }[] = [
   {
     title: "Explore destinations",
-    body: "Browse regions and European Union member states.",
+    body: "Browse regions and European Union member states to decide where to look.",
     status: "verified",
     label: "Available now",
   },
@@ -52,35 +52,37 @@ export default function HowItWorksPage() {
   return (
     <div className="page-container section-y">
       <PageIntro title="How it works">
-        Pathway AI is being built in stages. Only the first stage exists today.
+        Pathway AI is being built in five stages. Only the first exists today.
         The rest are plans, not features.
       </PageIntro>
 
-      <ol className="mt-10 max-w-3xl">
+      <ol className="mt-10 grid max-w-3xl gap-3">
         {STAGES.map((s, i) => (
-          <li key={s.title} className="relative flex gap-5 pb-8 last:pb-0">
-            {i < STAGES.length - 1 ? (
-              <span
-                aria-hidden
-                className="absolute top-10 bottom-0 left-5 w-px bg-border-strong"
-              />
-            ) : null}
+          <li
+            key={s.title}
+            className={`flex items-start gap-4 card p-4 sm:p-5 ${
+              i === 0 ? "border-primary" : ""
+            }`}
+          >
             <span
               aria-hidden
-              className={`relative z-10 grid size-10 shrink-0 place-items-center rounded-full border text-sm font-bold ${
+              className={`grid size-10 shrink-0 place-items-center rounded-full text-sm font-bold ${
                 i === 0
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border-strong bg-surface"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground"
               }`}
             >
               {i + 1}
             </span>
-            <div className="pt-1.5">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-lg font-bold">{s.title}</h2>
-                <StatusBadge status={s.status}>{s.label}</StatusBadge>
-              </div>
+            <div className="min-w-0">
+              <h2 className="text-lg font-bold">
+                <span className="sr-only">Step {i + 1}: </span>
+                {s.title}
+              </h2>
               <p className="mt-1 text-muted-foreground">{s.body}</p>
+              <StatusBadge status={s.status} className="mt-3">
+                {s.label}
+              </StatusBadge>
             </div>
           </li>
         ))}

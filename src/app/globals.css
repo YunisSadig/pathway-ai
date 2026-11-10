@@ -143,7 +143,7 @@
 @utility page-container {
   margin-inline: auto;
   width: 100%;
-  max-width: 72rem;
+  max-width: 76rem;
   padding-inline: 1rem;
   @media (min-width: 40rem) {
     padding-inline: 1.5rem;
@@ -182,6 +182,12 @@
   font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.75rem);
   line-height: 1.12;
   text-wrap: balance;
+}
+@utility eyebrow {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--primary-soft-foreground);
 }
 @utility measure {
   max-width: 60ch;
@@ -223,6 +229,16 @@ body {
     color 200ms ease;
 }
 
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 @keyframes menu-in {
   from {
     opacity: 0;

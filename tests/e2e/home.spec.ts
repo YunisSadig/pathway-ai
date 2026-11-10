@@ -13,8 +13,8 @@ test("hero shows the headline and two working calls to action", async ({
     page.getByRole("link", { name: "Explore universities" }).first(),
   ).toHaveAttribute("href", "/universities");
   await expect(
-    page.getByRole("link", { name: "Explore scholarships" }).first(),
-  ).toHaveAttribute("href", "/scholarships");
+    page.getByRole("link", { name: "How it works", exact: true }).last(),
+  ).toHaveAttribute("href", "/how-it-works");
 });
 
 test("hero destinations open the matching region", async ({ page }) => {

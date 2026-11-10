@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   EU_COUNTRIES,
@@ -57,6 +57,9 @@ export function DestinationPicker({ basePath }: { basePath: string }) {
                 aria-current={region?.id === r.id ? "true" : undefined}
                 className={cn(chip, region?.id === r.id ? on : idle)}
               >
+                {region?.id === r.id ? (
+                  <Check aria-hidden className="mr-1.5 size-4" />
+                ) : null}
                 {r.name}
               </Link>
             </li>
@@ -72,7 +75,7 @@ export function DestinationPicker({ basePath }: { basePath: string }) {
           <h2 className="text-sm font-semibold text-muted-foreground">
             Member states ({EU_COUNTRIES.length})
           </h2>
-          <ul className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <ul className="-mx-1 mt-1 grid max-h-[17.5rem] grid-cols-2 gap-2 overflow-y-auto p-1 sm:max-h-none sm:grid-cols-3 sm:overflow-visible lg:grid-cols-4 xl:grid-cols-5">
             {EU_COUNTRIES.map((c) => (
               <li key={c.code}>
                 <Link
@@ -100,14 +103,14 @@ export function DestinationPicker({ basePath }: { basePath: string }) {
       ) : null}
 
       {region ? (
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl bg-muted px-4 py-2">
           <p className="text-sm">
             Selected:{" "}
             <strong>
               {country ? `${country.name}, European Union` : region.name}
             </strong>
           </p>
-          <Button asChild variant="ghost" size="sm">
+          <Button asChild variant="outline" size="sm">
             <Link href={href({})} scroll={false}>
               <X aria-hidden /> Clear selection
             </Link>

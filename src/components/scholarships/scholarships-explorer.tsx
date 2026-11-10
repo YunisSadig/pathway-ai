@@ -87,7 +87,11 @@ export function ScholarshipsExplorer() {
               </Link>
             </Button>
           ) : null}
-          <Button asChild variant={scope ? "ghost" : "outline"}>
+          <Button
+            asChild
+            variant={scope ? "link" : "outline"}
+            size={scope ? "link" : "md"}
+          >
             <Link href="/universities">Browse universities</Link>
           </Button>
         </EmptyState>

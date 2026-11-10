@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight, Globe2, GraduationCap } from "lucide-react";
 import { Hero } from "@/components/home/hero";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -8,13 +9,15 @@ const TODAY = [
     title: "Universities",
     body: "Browse by region, and by member state inside the European Union. Listings arrive once they are verified.",
     href: "/universities",
-    cta: "Explore universities",
+    cta: "Browse destinations",
+    Icon: Globe2,
   },
   {
     title: "Scholarships",
-    body: "See what the scholarship directory will state for every entry, from eligibility to the official source.",
+    body: "See what each scholarship entry will state, from eligibility to the official source.",
     href: "/scholarships",
-    cta: "Explore scholarships",
+    cta: "See what's coming",
+    Icon: GraduationCap,
   },
 ];
 
@@ -39,14 +42,28 @@ export default function HomePage() {
             What you can do today
           </h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {TODAY.map((item) => (
-              <div key={item.title} className="flex flex-col card p-6">
-                <h3 className="text-xl font-extrabold">{item.title}</h3>
-                <p className="mt-2 text-muted-foreground">{item.body}</p>
-                <Button asChild variant="outline" className="mt-5 self-start">
-                  <Link href={item.href}>{item.cta}</Link>
-                </Button>
-              </div>
+            {TODAY.map(({ title, body, href, cta, Icon }) => (
+              <Link
+                key={title}
+                href={href}
+                className="group flex flex-col card p-6 transition-[border-color,box-shadow] duration-150 hover:border-border-strong hover:shadow-md"
+              >
+                <span
+                  aria-hidden
+                  className="grid size-11 place-items-center rounded-lg bg-primary-soft text-primary-soft-foreground"
+                >
+                  <Icon className="size-5" />
+                </span>
+                <h3 className="mt-4 text-xl font-extrabold">{title}</h3>
+                <p className="mt-2 text-muted-foreground">{body}</p>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary-soft-foreground">
+                  {cta}
+                  <ArrowRight
+                    aria-hidden
+                    className="size-4 transition-transform duration-150 group-hover:translate-x-0.5"
+                  />
+                </span>
+              </Link>
             ))}
           </div>
         </div>
@@ -60,19 +77,21 @@ export default function HomePage() {
           <h2 id="planned-title" className="title-section">
             Where Pathway AI is heading
           </h2>
-          <p className="mt-3 text-muted-foreground">
+          <p className="mt-3 measure text-muted-foreground">
             The goal is to help you understand requirements, costs and
             alternatives before you apply. These parts are not built yet.
           </p>
-          <Button asChild variant="ghost" className="mt-4 -ml-3">
-            <Link href="/how-it-works">See how it works</Link>
+          <Button asChild variant="link" size="link" className="mt-2">
+            <Link href="/how-it-works">
+              See how it works <ArrowRight aria-hidden />
+            </Link>
           </Button>
         </div>
         <ul className="divide-y divide-border border-y border-border">
           {PLANNED.map((item) => (
             <li
               key={item}
-              className="flex flex-wrap items-center justify-between gap-2 py-4"
+              className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-4"
             >
               <span className="font-semibold">{item}</span>
               <StatusBadge status="hypothetical">Planned</StatusBadge>

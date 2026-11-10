@@ -15,6 +15,7 @@ export const buttonVariants = cva(
         outline:
           "border border-border-strong bg-surface text-foreground hover:bg-hover",
         ghost: "text-foreground hover:bg-hover",
+        link: "px-0 text-primary-soft-foreground underline-offset-4 hover:underline",
         destructive: "bg-danger text-background hover:opacity-90",
       },
       size: {
@@ -22,6 +23,7 @@ export const buttonVariants = cva(
         md: "h-11 px-5",
         lg: "h-12 px-6 text-base",
         icon: "size-11",
+        link: "h-11",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

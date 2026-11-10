@@ -43,7 +43,11 @@ export function UniversitiesExplorer() {
                 </Link>
               </Button>
             ) : null}
-            <Button asChild variant={label ? "ghost" : "outline"}>
+            <Button
+              asChild
+              variant={label ? "link" : "outline"}
+              size={label ? "link" : "md"}
+            >
               <Link href="/how-it-works">See how Pathway AI will work</Link>
             </Button>
           </EmptyState>
