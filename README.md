@@ -1,8 +1,8 @@
-# Pathway AI
+# Pathway AI Frontend
 
 Your future deserves more than a guess.
 
-Pathway AI is an international education guide that is **in development**. This repository is a deliberately small **four-page frontend foundation**: Next.js (App Router), TypeScript (strict), Tailwind CSS and accessible Radix primitives. There is no backend, database or account system.
+Pathway AI is an international education guide that is **in development**. This repository (`pathway-ai-frontend`) is the web frontend of that product. It is a deliberately small **four-page frontend foundation**: Next.js (App Router), TypeScript (strict), Tailwind CSS and accessible Radix primitives. There is no backend, database or account system.
 
 ## What exists today
 
@@ -10,7 +10,7 @@ Pathway AI is an international education guide that is **in development**. This 
 | --------------- | --------------------------------------------------------------------------------- |
 | `/`             | Home: what Pathway AI is, what works now, where it is heading                     |
 | `/universities` | Browse destinations by region and by EU member state. Shows an honest empty state |
-| `/scholarships` | Browse by degree level and destination. Explains what the directory will contain  |
+| `/scholarships` | Explains why funding differs and what each entry will show. Honest empty state    |
 | `/how-it-works` | The five planned stages, marked Available now, In preparation or Planned          |
 
 Selections are kept in the URL, for example `/universities?region=eu&country=poland`. Unknown or inconsistent parameters are ignored.
@@ -34,6 +34,17 @@ The previous implementation is kept in Git history and tagged `archive/mvp-works
 - A Java (Spring Boot) REST backend with PostgreSQL
 
 None of these are implemented. The frontend only separates pages, components, static configuration (`src/lib/geography.ts`) and types (`src/types`) so that data can be connected later.
+
+## Repositories
+
+Pathway AI is split into two independent repositories:
+
+| Repository                                  | Responsibility                                           | Status                        |
+| ------------------------------------------- | -------------------------------------------------------- | ----------------------------- |
+| `YunisSadig/pathway-ai-frontend` (this one) | Web UI: pages, navigation, theming, accessibility, tests | Four-page foundation complete |
+| `YunisSadig/pathway-ai-backend`             | Data and APIs: Java 21+, Spring Boot, PostgreSQL, REST   | Planned. Not created yet      |
+
+This repository contains no backend code, database client or API client. When the backend exists, the frontend will consume its REST API; until then there is no data in the app.
 
 ## Getting started
 
