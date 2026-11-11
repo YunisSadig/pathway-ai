@@ -8,7 +8,7 @@ export function PageIntro({
   return (
     <header className="max-w-2xl">
       <h1 className="title-page">{title}</h1>
-      <p className="mt-3 text-lg text-muted-foreground">{children}</p>
+      <p className="mt-2 text-lg text-muted-foreground">{children}</p>
     </header>
   );
 }

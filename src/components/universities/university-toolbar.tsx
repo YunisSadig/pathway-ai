@@ -25,13 +25,13 @@ function ToolbarForm({ view, onChange }: Props) {
     <form
       role="search"
       aria-label="Search universities"
-      className="flex flex-wrap items-end gap-3"
+      className="flex flex-wrap items-end gap-2"
       onSubmit={(e) => {
         e.preventDefault();
         onChange({ q: text.trim() });
       }}
     >
-      <label className="grid min-w-0 flex-1 gap-1 text-sm font-semibold sm:min-w-64">
+      <label className="grid min-w-0 flex-1 gap-1 text-sm font-medium sm:min-w-64">
         University name
         <input
           type="search"
@@ -46,7 +46,7 @@ function ToolbarForm({ view, onChange }: Props) {
       <Button type="submit">
         <Search aria-hidden /> Search
       </Button>
-      <label className="grid gap-1 text-sm font-semibold">
+      <label className="grid gap-1 text-sm font-medium">
         Sort by
         <select
           value={`${view.sort}:${view.direction}`}

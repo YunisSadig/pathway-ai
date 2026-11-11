@@ -6,23 +6,23 @@ import { StatusBadge } from "@/components/ui/status-badge";
 
 const TODAY = [
   {
-    title: "Universities",
-    body: "Browse by region, and by member state inside the European Union. Listings arrive once they are verified.",
+    title: "Degree programs",
+    body: "Filter by destination, level, discipline and language. Each program page shows tuition, deadlines and requirements as published, with the official source.",
     href: "/universities",
-    cta: "Browse destinations",
-    Icon: Globe2,
+    cta: "Browse programs",
+    Icon: GraduationCap,
   },
   {
-    title: "Scholarships",
-    body: "See what each scholarship entry will state, from eligibility to the official source.",
-    href: "/scholarships",
-    cta: "See what's coming",
-    Icon: GraduationCap,
+    title: "Universities",
+    body: "See which universities are listed in each destination and the programs each one offers.",
+    href: "/universities?view=universities",
+    cta: "Browse universities",
+    Icon: Globe2,
   },
 ];
 
 const PLANNED = [
-  "Verified university and program information",
+  "Verified scholarship listings",
   "A student profile with qualifications and budget",
   "Comparing requirements and costs",
   "A primary and a backup study plan",
@@ -46,7 +46,7 @@ export default function HomePage() {
               <Link
                 key={title}
                 href={href}
-                className="group flex flex-col card p-6 transition-[border-color,box-shadow] duration-150 hover:border-border-strong hover:shadow-md"
+                className="group flex flex-col card p-6 transition-colors duration-150 hover:border-border-strong hover:bg-hover"
               >
                 <span
                   aria-hidden
@@ -54,7 +54,7 @@ export default function HomePage() {
                 >
                   <Icon className="size-5" />
                 </span>
-                <h3 className="mt-4 text-xl font-extrabold">{title}</h3>
+                <h3 className="mt-4 text-xl font-bold">{title}</h3>
                 <p className="mt-2 text-muted-foreground">{body}</p>
                 <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary-soft-foreground">
                   {cta}
@@ -79,7 +79,8 @@ export default function HomePage() {
           </h2>
           <p className="mt-3 measure text-muted-foreground">
             The goal is to help you understand requirements, costs and
-            alternatives before you apply. These parts are not built yet.
+            alternatives before you apply. These parts are not built yet, and
+            scholarships are not listed yet.
           </p>
           <Button asChild variant="link" size="link" className="mt-2">
             <Link href="/how-it-works">

@@ -50,10 +50,7 @@ export async function apiGet<T>(
 
   let res: Response;
   try {
-    res = await fetch(`${base}${path}${buildQuery(params)}`, {
-      ...init,
-      headers: { Accept: "application/json", ...init?.headers },
-    });
+    res = await fetch(`${base}${path}${buildQuery(params)}`, init);
   } catch (error) {
     if (error instanceof DOMException && error.name === "AbortError") {
       throw error;

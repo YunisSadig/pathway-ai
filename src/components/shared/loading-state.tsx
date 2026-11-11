@@ -13,7 +13,7 @@ export function LoadingState({
         <div
           key={i}
           aria-hidden
-          className="h-28 animate-pulse card bg-muted shadow-none"
+          className="h-24 animate-pulse rounded-xl bg-muted"
         />
       ))}
     </div>

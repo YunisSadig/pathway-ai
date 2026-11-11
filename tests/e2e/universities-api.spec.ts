@@ -150,6 +150,7 @@ test("search and country combine, and the search survives a destination change",
   await expect(page.getByRole("article")).toHaveCount(1);
   expect(api.requests.at(-1)?.get("country")).toBe("DE");
   expect(api.requests.at(-1)?.get("q")).toBe("12");
+  await page.getByRole("button", { name: "Change", exact: true }).click();
   await page.getByRole("link", { name: "Japan" }).click();
   await expect(page).toHaveURL(/q=12&region=jp/);
   await expect(

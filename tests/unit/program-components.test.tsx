@@ -70,7 +70,7 @@ describe("ProgramCard", () => {
     expect(
       screen.getByRole("link", { name: "Synthetic University" }),
     ).toHaveAttribute("href", "/universities/synthetic-u");
-    expect(screen.getAllByText(/Not stated/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/not stated/i).length).toBeGreaterThan(0);
     expect(
       screen.getByText("Not verified against official pages"),
     ).toBeInTheDocument();

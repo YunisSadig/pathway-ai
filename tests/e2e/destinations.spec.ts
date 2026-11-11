@@ -58,6 +58,10 @@ test("selecting a country filters programs through the API, changing and clearin
   await expect(page.getByText("1 program in Poland")).toBeVisible();
   const lastProgramRequest = () =>
     api.requests.filter((r) => r.get("size") === "12").at(-1);
+  // the picker collapses to a summary once a destination is chosen
+  await expect(page.getByText("Poland, European Union")).toBeVisible();
+  await expect(states).toBeHidden();
+  await page.getByRole("button", { name: "Change", exact: true }).click();
   await expect(states.getByRole("link", { name: /Poland/ })).toHaveAttribute(
     "aria-current",
     "true",

@@ -76,11 +76,16 @@ export function ProgramsPanel({
     <div className="grid gap-6">
       <ProgramFilters
         params={params}
+        base={base}
         facets={facets}
         clearHref={clearHref}
         onChange={onChange}
       />
-      <section aria-labelledby="results-title" aria-live="polite">
+      <section
+        aria-labelledby="results-title"
+        aria-live="polite"
+        className="min-h-[75vh]"
+      >
         <h2 id="results-title" className="sr-only">
           Program results
         </h2>
@@ -129,7 +134,7 @@ export function ProgramsPanel({
           </EmptyState>
         ) : (
           <div className="grid gap-5">
-            <p className="text-sm text-muted-foreground">
+            <p className="font-semibold">
               {state.data.totalElements}{" "}
               {state.data.totalElements === 1 ? "program" : "programs"}
               {label ? ` in ${label}` : ""}
@@ -140,10 +145,10 @@ export function ProgramsPanel({
               totalPages={state.data.totalPages}
               hrefFor={(page) => discoveryHref(base, { ...params, page })}
             />
-            <p className="text-sm text-muted-foreground">
-              Each program page shows tuition, deadlines and requirements
-              exactly as published, with the official source. Nothing here is a
-              promise of admission or funding.
+            <p className="max-w-prose text-sm text-muted-foreground">
+              Open a program to see tuition, deadlines and requirements exactly
+              as published, with the official source. Nothing here is a promise
+              of admission or funding.
             </p>
           </div>
         )}

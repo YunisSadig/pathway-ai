@@ -6,7 +6,7 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-muted">
       <div className="page-container flex flex-col gap-6 py-10 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
-          <p className="font-display text-lg font-extrabold">{SITE.name}</p>
+          <p className="font-display text-lg font-bold">{SITE.name}</p>
           <p className="mt-2 text-sm text-muted-foreground">
             A study-abroad guide in development.
           </p>

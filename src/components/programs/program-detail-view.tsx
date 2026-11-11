@@ -47,7 +47,9 @@ import {
 } from "./program-sections";
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return <div className="page-container section-y">{children}</div>;
+  return (
+    <div className="page-container min-h-[100svh] section-y">{children}</div>
+  );
 }
 
 export function ProgramDetailView() {

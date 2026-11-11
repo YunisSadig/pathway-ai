@@ -13,7 +13,7 @@ export function Logo() {
   return (
     <Link
       href="/"
-      className="flex items-center gap-2 font-display text-lg font-extrabold tracking-tight"
+      className="flex items-center gap-2 font-display text-lg font-bold tracking-tight"
     >
       <span
         aria-hidden
@@ -113,7 +113,7 @@ export function SiteHeader() {
                 className="fixed inset-y-0 right-0 z-50 flex w-[min(20rem,88vw)] flex-col gap-6 border-l border-border bg-background p-5 shadow-lg data-[state=closed]:animate-[slide-out_180ms_ease-in_forwards] data-[state=open]:animate-[slide-in_240ms_var(--ease-out-soft)]"
               >
                 <div className="flex items-center justify-between">
-                  <Dialog.Title className="font-display text-lg font-extrabold">
+                  <Dialog.Title className="font-display text-lg font-bold">
                     Menu
                   </Dialog.Title>
                   <Dialog.Close

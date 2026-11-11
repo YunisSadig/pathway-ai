@@ -114,7 +114,7 @@ export function FundingList({ items = [] }: { items?: FundingItem[] }) {
     <ul className="divide-y divide-border">
       {items.map((f, i) => (
         <li key={i} className="grid gap-1.5 py-4 first:pt-0">
-          <p className="text-xs font-semibold tracking-wide text-primary-soft-foreground uppercase">
+          <p className="text-sm font-semibold text-primary-soft-foreground">
             {FUNDING_LABELS[f.kind]}
           </p>
           <p className="font-semibold">{f.name}</p>
