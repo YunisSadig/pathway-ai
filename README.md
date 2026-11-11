@@ -52,6 +52,10 @@ npm run dev                                           # http://localhost:3000
 
 The backend database ships empty, so `/universities` shows "No universities have been added yet." until real, source-cited data is imported on the backend side.
 
+## Product direction
+
+Pathway AI is becoming a global, program-first discovery platform for all disciplines and for bachelor and master degrees. See [docs/product/MVP_SPEC.md](docs/product/MVP_SPEC.md). What is described above is what exists today.
+
 ## Repositories
 
 | Repository                                  | Responsibility                                           |

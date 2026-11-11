@@ -2,6 +2,8 @@
 
 @AGENTS.md
 
+- Product direction: read `docs/product/MVP_SPEC.md` before any product, data-model or scope work. It is global, program-first (all disciplines, bachelor and master), with sourced data, USER/ADMIN server-side authorization, no invented acceptance probabilities. It is the target, not the current state: the scope rules below stay in force until the PR for the relevant step changes them deliberately. The backend repo keeps a matching copy; do not edit it from here.
+
 - Scope: exactly four pages (`/`, `/universities`, `/scholarships`, `/how-it-works`). Do not re-add the student workspace, dashboards, auth or onboarding. A university detail route is allowed only when the backend-supported discovery flow needs it.
 - Frontend only. No backend code, auth, payments, database clients or paid APIs here. `/universities` reads the Spring Boot API through `src/lib/api` (browser `fetch` to `NEXT_PUBLIC_API_BASE_URL`). Scholarships have no backend: keep their honest empty state and keep `src/lib/api/scholarships.ts` unused by pages.
 - The API contract is owned by the backend repo (README "REST API contract", pinned by its `UniversityApiIT`). `src/types/university.ts` mirrors it exactly: upper-case `degreeLevel`, nullable fields, no `id`, tuition, requirements or verification. Never add a field the API does not return. If the contract changes, update types, `tests/e2e/helpers/api.ts` and the unit tests together.
