@@ -68,6 +68,10 @@ Invalid values are ignored, never forwarded.
 
 Copy `.env.example` to `.env.local`. The browser calls the backend directly (cross-origin), so the backend must allow the frontend origin: set its `CORS_ALLOWED_ORIGINS` to the exact frontend origin (default `http://localhost:3000`; wildcards are refused). A wrong origin appears as "could not be reached", because browsers hide CORS failures from scripts. Never put a secret in a `NEXT_PUBLIC_*` variable; the API is public and read-only.
 
+### Troubleshooting: "The program service isn't configured"
+
+That message means `NEXT_PUBLIC_API_BASE_URL` was empty when the app started. Create `.env.local` (`cp .env.example .env.local`) and **restart `npm run dev`**: environment files are read once at startup. If instead the page says the service **could not be reached**, the variable is set but the backend is not running (or its CORS list lacks `http://localhost:3000`): start it as below and check `curl http://localhost:8080/actuator/health`.
+
 ### Run both locally
 
 ```bash
