@@ -1,296 +1,263 @@
-import Link from "next/link";
 import {
   applicantLabel,
   BILLING_LABELS,
+  byTemporalStatus,
   formatDate,
   formatMoney,
+  FUNDING_LABELS,
+  REQUIREMENT_GROUPS,
   REQUIREMENT_LABELS,
   tuitionPeriodLabel,
 } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { SourceLine, TemporalBadge } from "@/components/shared/fact-ui";
+import { ClampText } from "@/components/shared/clamp-text";
+import { Evidence, Missing, Notice } from "@/components/shared/detail-ui";
+import { TemporalBadge } from "@/components/shared/fact-ui";
+import type { FundingItem } from "@/types/funding";
 import type { Intake, Requirement, Tuition } from "@/types/program";
 
-/** Shared heading + "nothing recorded" wording for a section of published facts. */
-function Section({
-  id,
-  title,
-  intro,
-  children,
-}: {
-  id: string;
-  title: string;
-  intro?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section aria-labelledby={id} className="card p-5 sm:p-6">
-      <h2 id={id} className="text-xl font-bold">
-        {title}
-      </h2>
-      {intro ? (
-        <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-          {intro}
-        </p>
-      ) : null}
-      <div className="mt-4">{children}</div>
-    </section>
-  );
-}
+/*
+ * Content blocks for the program page. They render facts only: the surrounding section, its heading and
+ * its anchor come from <DetailSection> in the view. Each block has a single honest empty state.
+ */
 
-function Missing({ children }: { children: React.ReactNode }) {
+export function TuitionList({ tuition }: { tuition: Tuition[] }) {
+  if (tuition.length === 0) {
+    return (
+      <Missing>
+        No tuition information has been recorded for this program yet. This does
+        not mean it is free. Check the official page for current fees.
+      </Missing>
+    );
+  }
   return (
-    <p className="bg-surface-muted rounded-lg border border-dashed border-border-strong p-4 text-sm text-muted-foreground">
-      {children}
-    </p>
-  );
-}
-
-const order = { CURRENT: 0, UNKNOWN_YEAR: 1, HISTORICAL: 2 } as const;
-
-export function TuitionSection({ tuition }: { tuition: Tuition[] }) {
-  const rows = [...tuition].sort(
-    (a, b) => order[a.temporalStatus] - order[b.temporalStatus],
-  );
-  return (
-    <Section
-      id="tuition"
-      title="Tuition"
-      intro="Fees exactly as published, with the period the source attached to each one."
-    >
-      {rows.length === 0 ? (
-        <Missing>
-          No tuition information has been recorded for this program yet. This
-          does not mean it is free. Check the official page for current fees.
-        </Missing>
-      ) : (
-        <ul className="grid gap-3">
-          {rows.map((t, i) => (
+    <div className="grid gap-4">
+      <Notice>
+        Fees can differ by applicant group. Check which group applies to you on
+        the official page.
+      </Notice>
+      <ul className="divide-y divide-border">
+        {byTemporalStatus(tuition).map((t, i) => {
+          const historical = t.temporalStatus === "HISTORICAL";
+          return (
             <li
               key={i}
-              className={cn(
-                "rounded-xl border p-4",
-                t.temporalStatus === "HISTORICAL"
-                  ? "bg-surface-muted border-border"
-                  : "border-border-strong bg-surface",
-              )}
+              className="grid gap-x-8 gap-y-2 py-5 first:pt-0 sm:grid-cols-[13rem_minmax(0,1fr)]"
             >
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <p
-                  className={cn(
-                    "text-2xl font-bold",
-                    t.temporalStatus === "HISTORICAL" &&
-                      "text-muted-foreground line-through decoration-1",
-                  )}
-                >
-                  {formatMoney(t.amount, t.currency)}{" "}
-                  <span className="text-sm font-semibold text-muted-foreground no-underline">
-                    {BILLING_LABELS[t.billingPeriod]}
-                  </span>
-                </p>
-                <TemporalBadge status={t.temporalStatus} />
-              </div>
-              <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-                <div>
-                  <dt className="font-semibold">Applies to</dt>
-                  <dd>{applicantLabel(t.studentCategory)}</dd>
+              <p
+                className={cn(
+                  "text-2xl leading-tight font-bold tabular-nums",
+                  historical &&
+                    "text-muted-foreground line-through decoration-1",
+                )}
+              >
+                {formatMoney(t.amount, t.currency)}
+                <span className="block text-sm font-medium text-muted-foreground no-underline">
+                  {BILLING_LABELS[t.billingPeriod]}
+                </span>
+              </p>
+              <div className="grid min-w-0 gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <p className="font-semibold">
+                    {applicantLabel(t.studentCategory)}
+                  </p>
+                  <TemporalBadge status={t.temporalStatus} />
                 </div>
-                <div>
-                  <dt className="font-semibold">Period</dt>
-                  <dd>{tuitionPeriodLabel(t)}</dd>
-                </div>
-              </dl>
-              {t.scopeNote ? (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Source wording: “{t.scopeNote}”
+                <p className="text-sm text-muted-foreground">
+                  {tuitionPeriodLabel(t)}
                 </p>
-              ) : null}
-              {t.temporalStatus === "UNKNOWN_YEAR" ? (
-                <p className="mt-2 text-sm font-medium text-warning">
-                  The source does not say which year this fee applies to.
-                  Confirm it on the official page before relying on it.
-                </p>
-              ) : null}
-              {t.temporalStatus === "HISTORICAL" ? (
-                <p className="mt-2 text-sm font-medium text-danger">
-                  This period has ended. It is shown for context only and is not
-                  today&apos;s price.
-                </p>
-              ) : null}
-              <div className="mt-3">
-                <SourceLine source={t.source} />
+                {t.temporalStatus === "UNKNOWN_YEAR" ? (
+                  <Notice tone="warning">
+                    The source gives no year for this fee. Confirm it on the
+                    official page before relying on it.
+                  </Notice>
+                ) : null}
+                {historical ? (
+                  <Notice tone="danger">
+                    This period has ended. It is shown for context only and is
+                    not today&apos;s price.
+                  </Notice>
+                ) : null}
+                {t.scopeNote ? (
+                  <div className="text-sm text-muted-foreground">
+                    <ClampText
+                      text={`Source wording: “${t.scopeNote}”`}
+                      limit={200}
+                    />
+                  </div>
+                ) : null}
+                <Evidence source={t.source} />
               </div>
             </li>
-          ))}
-        </ul>
-      )}
-    </Section>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 
-export function IntakesSection({ intakes }: { intakes: Intake[] }) {
-  const rows = [...intakes].sort(
-    (a, b) => order[a.temporalStatus] - order[b.temporalStatus],
-  );
+/**
+ * Funding is never assumed. The backend has no funding data yet, so `items` is normally empty and one short
+ * sentence is shown. When data exists, each kind keeps its own label so a waiver is not read as a grant.
+ */
+export function FundingList({ items = [] }: { items?: FundingItem[] }) {
+  if (items.length === 0) {
+    return (
+      <Missing>
+        No verified scholarship or tuition-waiver information is available for
+        this program yet. If the university offers funding it is not shown here,
+        and nothing on this page is a promise that you will receive any.
+      </Missing>
+    );
+  }
   return (
-    <Section
-      id="deadlines"
-      title="Intakes and application deadlines"
-      intro="Dates as published. They change every year, so confirm them on the official page."
-    >
-      {rows.length === 0 ? (
-        <Missing>
-          No intake or deadline information has been recorded for this program
-          yet.
-        </Missing>
-      ) : (
-        <ul className="grid gap-3">
-          {rows.map((i, n) => (
-            <li
-              key={n}
+    <ul className="divide-y divide-border">
+      {items.map((f, i) => (
+        <li key={i} className="grid gap-1.5 py-4 first:pt-0">
+          <p className="text-xs font-semibold tracking-wide text-primary-soft-foreground uppercase">
+            {FUNDING_LABELS[f.kind]}
+          </p>
+          <p className="font-semibold">{f.name}</p>
+          <ClampText text={f.summary} />
+          <Notice>
+            Eligibility applies. Receiving funding is not automatic.
+          </Notice>
+          <Evidence source={f.source} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Earliest first within a status group; undated cycles last. Status comes from the backend, never from position. */
+function sortIntakes(intakes: Intake[]): Intake[] {
+  return byTemporalStatus(intakes).sort((a, b) => {
+    if (a.temporalStatus !== b.temporalStatus) return 0;
+    return (a.applicationDeadline ?? "9999").localeCompare(
+      b.applicationDeadline ?? "9999",
+    );
+  });
+}
+
+export function DeadlineTimeline({ intakes }: { intakes: Intake[] }) {
+  return (
+    <ol className="grid">
+      {sortIntakes(intakes).map((i, n) => {
+        const past = i.temporalStatus === "HISTORICAL";
+        return (
+          <li
+            key={n}
+            className="relative grid gap-1 border-l-2 border-border pb-7 pl-6 last:border-transparent last:pb-0"
+          >
+            <span
+              aria-hidden
               className={cn(
-                "rounded-xl border p-4",
-                i.temporalStatus === "HISTORICAL"
-                  ? "bg-surface-muted border-border"
-                  : "border-border-strong bg-surface",
+                "absolute top-1.5 -left-[7px] size-3 rounded-full border-2 bg-background",
+                i.temporalStatus === "CURRENT" && "border-success bg-success",
+                i.temporalStatus === "UNKNOWN_YEAR" && "border-warning",
+                past && "border-border-strong",
               )}
-            >
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <p className="font-bold">{i.label}</p>
-                <TemporalBadge status={i.temporalStatus} />
-              </div>
-              <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-3">
-                <div>
-                  <dt className="font-semibold">Application deadline</dt>
-                  <dd>{formatDate(i.applicationDeadline)}</dd>
-                </div>
-                <div>
-                  <dt className="font-semibold">Studies start</dt>
-                  <dd>{formatDate(i.startDate)}</dd>
-                </div>
-                <div>
-                  <dt className="font-semibold">Applies to</dt>
-                  <dd>{applicantLabel(i.applicantCategory)}</dd>
-                </div>
-              </dl>
-              {i.academicYear ? (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Academic year {i.academicYear}
-                </p>
-              ) : null}
-              {i.temporalStatus === "HISTORICAL" ? (
-                <p className="mt-2 text-sm font-medium text-danger">
-                  This deadline has passed.
-                </p>
-              ) : null}
-              <div className="mt-3">
-                <SourceLine source={i.source} />
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Section>
+            />
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+              <p
+                className={cn(
+                  "text-lg font-bold tabular-nums",
+                  past && "text-muted-foreground",
+                )}
+              >
+                <span className="sr-only">Application deadline: </span>
+                {i.applicationDeadline
+                  ? formatDate(i.applicationDeadline)
+                  : "Deadline not published"}
+              </p>
+              <TemporalBadge status={i.temporalStatus} />
+            </div>
+            <p className="font-medium">{i.label}</p>
+            <p className="text-sm text-muted-foreground">
+              {[
+                i.academicYear ? `Academic year ${i.academicYear}` : null,
+                i.startDate ? `Studies start ${formatDate(i.startDate)}` : null,
+                applicantLabel(i.applicantCategory),
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+            {past ? (
+              <Notice tone="danger">
+                This deadline has passed. It is shown for context only.
+              </Notice>
+            ) : null}
+            {i.temporalStatus === "UNKNOWN_YEAR" ? (
+              <Notice tone="warning">
+                The source does not say which year this applies to. Confirm the
+                date on the official page.
+              </Notice>
+            ) : null}
+            <Evidence source={i.source} />
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
 function RequirementItem({ r }: { r: Requirement }) {
   return (
-    <li
-      className={cn(
-        "rounded-xl border p-4",
-        r.temporalStatus === "HISTORICAL"
-          ? "bg-surface-muted border-border"
-          : "border-border-strong bg-surface",
-      )}
-    >
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="font-bold">{REQUIREMENT_LABELS[r.type]}</p>
-        <TemporalBadge status={r.temporalStatus} />
+    <li className="grid gap-1.5 py-3.5 first:pt-0 last:pb-0">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+        <p className="font-semibold">{REQUIREMENT_LABELS[r.type]}</p>
+        {r.temporalStatus !== "CURRENT" ? (
+          <TemporalBadge status={r.temporalStatus} />
+        ) : null}
       </div>
-      <p className="mt-2">{r.description}</p>
+      <ClampText text={r.description} />
       {r.minimumValue !== null ? (
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Minimum: {r.minimumValue}
           {r.valueUnit ? ` ${r.valueUnit}` : ""}
         </p>
       ) : null}
-      <p className="mt-1 text-sm text-muted-foreground">
-        Application cycle: {r.applicationCycle}
+      <p className="text-sm text-muted-foreground">
+        Application cycle {r.applicationCycle}
       </p>
-      <div className="mt-3">
-        <SourceLine source={r.source} />
-      </div>
+      <Evidence source={r.source} />
     </li>
   );
 }
 
-export function RequirementsSection({
+export function RequirementGroups({
   requirements,
 }: {
   requirements: Requirement[];
 }) {
-  const language = requirements.filter((r) => r.type === "LANGUAGE_TEST");
-  const other = requirements.filter((r) => r.type !== "LANGUAGE_TEST");
-  return (
-    <Section
-      id="requirements"
-      title="Admission requirements"
-      intro="Published requirements only. Meeting them does not guarantee admission, and a missing item does not mean there is no requirement."
-    >
-      {requirements.length === 0 ? (
-        <Missing>
-          No admission requirements have been recorded for this program yet.
-          That does not mean there are none: check the official admissions page.
-        </Missing>
-      ) : (
-        <div className="grid gap-6">
-          {language.length ? (
-            <div>
-              <h3 className="font-semibold">Language requirements</h3>
-              <ul className="mt-2 grid gap-3">
-                {language.map((r, i) => (
-                  <RequirementItem key={i} r={r} />
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {other.length ? (
-            <div>
-              <h3 className="font-semibold">Other published requirements</h3>
-              <ul className="mt-2 grid gap-3">
-                {other.map((r, i) => (
-                  <RequirementItem key={i} r={r} />
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </div>
-      )}
-    </Section>
-  );
-}
-
-/** Honest funding placeholder: no scholarship API exists yet, so nothing is claimed. */
-export function FundingSection() {
-  return (
-    <Section
-      id="funding"
-      title="Scholarships and funding"
-      intro="Funding is never assumed."
-    >
+  if (requirements.length === 0) {
+    return (
       <Missing>
-        Pathway AI has no verified scholarship or tuition-waiver information for
-        this program yet. If the university offers any, it is not shown here,
-        and nothing on this page should be read as a promise of funding.{" "}
-        <Link
-          href="/scholarships"
-          className="font-semibold text-primary-soft-foreground underline underline-offset-4"
-        >
-          See the scholarships page
-        </Link>
-        .
+        No admission requirements have been recorded for this program yet. That
+        does not mean there are none: check the official admissions page.
       </Missing>
-    </Section>
+    );
+  }
+  return (
+    <div className="grid gap-8">
+      <Notice>
+        Published requirements only. Meeting them does not guarantee admission,
+        and a missing item does not mean there is no requirement.
+      </Notice>
+      {REQUIREMENT_GROUPS.map((g) => {
+        const rows = requirements.filter((r) => g.types.includes(r.type));
+        if (rows.length === 0) return null;
+        return (
+          <div key={g.title}>
+            <h3 className="text-base font-bold">{g.title}</h3>
+            <ul className="mt-3 divide-y divide-border">
+              {byTemporalStatus(rows).map((r, i) => (
+                <RequirementItem key={i} r={r} />
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
   );
 }

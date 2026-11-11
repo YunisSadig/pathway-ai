@@ -23,6 +23,8 @@ one. Never record an unverified fix as successful.
    `GET /api/v1/fields` (and languages).
 7. **Tuition filter semantics are the backend's:** only current, same-currency, per-year fees match. The UI says so.
 
+8. **Detail page redesign.** Hierarchy, patterns and trust rules are in `detail-page-design.md`.
+
 ## Mistakes and fixes
 
 | Problem                                                                                                       | Cause                                                                                                                                                                           | Fix                                                                                                                                                    | Prevention                                                                                                                                                                                 |
