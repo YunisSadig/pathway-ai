@@ -234,3 +234,28 @@ for (const scheme of ["light", "dark"] as const) {
     }
   });
 }
+
+test("each view issues exactly one API request (no duplicates)", async ({
+  page,
+}) => {
+  const api = await mockUniversities(page);
+  await page.goto("/universities");
+  await expect(page.getByRole("article")).toHaveCount(12);
+  expect(api.requests).toHaveLength(1);
+
+  await page.getByRole("link", { name: "Japan" }).click();
+  await expect(page.getByRole("article")).toHaveCount(1);
+  expect(api.requests).toHaveLength(2);
+
+  await page.getByLabel("University name").fill("15");
+  await page.getByRole("button", { name: "Search" }).click();
+  await expect(page).toHaveURL(/q=15/);
+  await expect(page.getByRole("article")).toHaveCount(1);
+  expect(api.requests).toHaveLength(3);
+
+  await page.getByLabel("Sort by").selectOption("city:asc");
+  await expect(page).toHaveURL(/sort=city/);
+  await expect.poll(() => api.requests.length).toBe(4);
+  await page.waitForTimeout(300);
+  expect(api.requests).toHaveLength(4);
+});
