@@ -29,7 +29,6 @@ test("removed product routes return 404", async ({ request }) => {
     "/life-abroad",
     "/advisor-preview",
     "/settings",
-    "/universities/delft-university-of-technology",
     "/scholarships/daad-scholarship-database",
     "/assessment",
   ]) {

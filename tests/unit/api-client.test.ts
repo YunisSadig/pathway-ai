@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError, apiGet, buildQuery } from "@/lib/api/client";
+import { getProgram, listPrograms } from "@/lib/api/programs";
 import { getUniversity, listUniversities } from "@/lib/api/universities";
 
 afterEach(() => {
@@ -145,5 +146,57 @@ describe("apiGet", () => {
     const err = await apiGet("/api/x").catch((e) => e);
     expect(err).toBeInstanceOf(ApiError);
     expect(err).toMatchObject({ status: 404, message: "Not found" });
+  });
+});
+
+describe("program endpoints", () => {
+  it("lists programs with filters on /api/v1/programs", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.test");
+    const fetchMock = vi.fn().mockResolvedValue(new Response("{}"));
+    vi.stubGlobal("fetch", fetchMock);
+    await listPrograms({
+      level: "master",
+      field: "economics",
+      language: "en",
+      country: "FI",
+      tuitionMax: 15000,
+      tuitionCurrency: "EUR",
+      page: 1,
+      size: 12,
+      sort: "university",
+      direction: "desc",
+    });
+    expect(fetchMock.mock.calls[0][0]).toBe(
+      "https://api.test/api/v1/programs?level=master&field=economics&language=en&country=FI&tuitionMax=15000&tuitionCurrency=EUR&page=1&size=12&sort=university&direction=desc",
+    );
+  });
+
+  it("encodes the program identifier for the detail endpoint", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.test");
+    const fetchMock = vi.fn().mockResolvedValue(new Response("{}"));
+    vi.stubGlobal("fetch", fetchMock);
+    await getProgram("uni--prog");
+    expect(fetchMock.mock.calls[0][0]).toBe(
+      "https://api.test/api/v1/programs/uni--prog",
+    );
+  });
+
+  it("surfaces a 404 as ApiError with the backend message", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.test");
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValue(
+          new Response(
+            JSON.stringify({ status: 404, message: "Program not found: x--y" }),
+            { status: 404 },
+          ),
+        ),
+    );
+    await expect(getProgram("x--y")).rejects.toMatchObject({
+      status: 404,
+      message: "Program not found: x--y",
+    });
   });
 });

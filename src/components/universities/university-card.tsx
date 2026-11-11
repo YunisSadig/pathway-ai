@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MapPin } from "lucide-react";
 import type { UniversitySummary } from "@/types/university";
 
@@ -15,7 +16,14 @@ export function UniversityCard({
   const { name, city, countryName, websiteUrl } = university;
   return (
     <article className="card p-5">
-      <h3 className="text-lg font-bold">{name}</h3>
+      <h3 className="text-lg font-bold">
+        <Link
+          href={`/universities/${university.slug}`}
+          className="underline-offset-4 hover:underline"
+        >
+          {name}
+        </Link>
+      </h3>
       <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
         <MapPin aria-hidden className="size-4 shrink-0" />
         {city ? `${city}, ${countryName}` : countryName}

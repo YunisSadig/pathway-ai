@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Dialog } from "radix-ui";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { NAV, SITE, type NavItem } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "./theme-switcher";
@@ -26,23 +26,48 @@ export function Logo() {
   );
 }
 
-function NavLinks({
-  items = NAV,
-  onNavigate,
-  className,
-  linkClassName,
-}: {
+type NavLinksProps = {
   items?: NavItem[];
   onNavigate?: () => void;
   className?: string;
   linkClassName?: string;
-}) {
-  const pathname = usePathname();
+};
+
+/**
+ * The current path is only known at request time on routes with a dynamic segment (programs and universities),
+ * so it is read inside Suspense; the fallback renders the same links without the active marker.
+ */
+function NavLinks(props: NavLinksProps) {
+  return (
+    <Suspense fallback={<NavLinkList {...props} pathname={null} />}>
+      <ActiveNavLinks {...props} />
+    </Suspense>
+  );
+}
+
+function ActiveNavLinks(props: NavLinksProps) {
+  return <NavLinkList {...props} pathname={usePathname()} />;
+}
+
+function NavLinkList({
+  items = NAV,
+  onNavigate,
+  className,
+  linkClassName,
+  pathname,
+}: NavLinksProps & { pathname: string | null }) {
   return (
     <ul className={className}>
       {items.map((item) => {
         const active =
-          item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          pathname === null
+            ? false
+            : item.href === "/"
+              ? pathname === "/"
+              : pathname.startsWith(item.href) ||
+                // program pages live under the Universities experience
+                (item.href === "/universities" &&
+                  pathname.startsWith("/programs"));
         return (
           <li key={item.href}>
             <Link

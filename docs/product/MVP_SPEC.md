@@ -55,15 +55,15 @@ The schema and API must allow new countries, fields of study, academic years, in
 
 ## 8. Current state versus target (as of this spec)
 
-| Area                                         | Today                                                                                                                       | Target                                           |
-| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Universities                                 | Backend lists universities; frontend `/universities` is live (search, country, sort, paging)                                | Programs-first discovery with sources            |
-| Programs                                     | Backend exposes program summaries on university detail; no frontend use; `DegreeLevel` also has `DIPLOMA` and `CERTIFICATE` | First-class, searchable, sourced entities        |
-| Requirements/tuition                         | Tables exist in the backend; **not exposed by the API**                                                                     | Exposed with source and verification status      |
-| Scholarships                                 | None (frontend shows an honest empty state)                                                                                 | Independent entities with structured eligibility |
-| Accounts / roles                             | None                                                                                                                        | USER and ADMIN, server-authorised                |
-| Profiles, saves, comparison, recommendations | None                                                                                                                        | Registered features, explainable                 |
-| Data                                         | No verified records                                                                                                         | Sourced records across fields and countries      |
+| Area                                         | Today                                                                                                       | Target                                                    |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Universities                                 | Backend lists universities; frontend `/universities` is live (search, country, sort, paging)                | Programs-first discovery with sources                     |
+| Programs                                     | Backend `/api/v1/programs` and the frontend program discovery, program and university detail pages are live | First-class, searchable, sourced entities                 |
+| Requirements/tuition                         | Shown on program pages with source, read date and Current/Outdated/Period-not-stated status                 | Exposed with source and verification status               |
+| Scholarships                                 | None (frontend shows an honest empty state)                                                                 | Independent entities with structured eligibility          |
+| Accounts / roles                             | None                                                                                                        | USER and ADMIN, server-authorised                         |
+| Profiles, saves, comparison, recommendations | None                                                                                                        | Registered features, explainable                          |
+| Data                                         | 8 source-cited programs (3 institutions, FI and NL); no active Apply links yet; no scholarships             | Sourced records across fields and countries, with history |
 
 ## 9. Suggested delivery order (each step = tests + PR, preserving what works)
 
