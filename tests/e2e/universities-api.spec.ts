@@ -22,7 +22,7 @@ const none = {
 
 test("renders API records without inventing anything", async ({ page }) => {
   await mockUniversities(page);
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   const first = page.getByRole("article").first();
   await expect(first.getByRole("heading")).toHaveText(
     "Synthetic Test University 01",
@@ -32,9 +32,12 @@ test("renders API records without inventing anything", async ({ page }) => {
     first.getByRole("link", { name: "University website" }),
   ).toHaveAttribute("href", "https://example.test/u/1");
   // Record 02 has no website: no link at all, never a placeholder.
-  await expect(page.getByRole("article").nth(1).getByRole("link")).toHaveCount(
-    0,
-  );
+  await expect(
+    page
+      .getByRole("article")
+      .nth(1)
+      .getByRole("link", { name: "University website" }),
+  ).toHaveCount(0);
   // Unknown data stays unknown.
   await expect(page.getByRole("article").first()).not.toContainText(
     /€|\$|tuition|ranking|deadline|verified/i,
@@ -50,7 +53,7 @@ test("shows a loading state while the request is in flight", async ({
     await gate;
     await json(route, universityPage(url));
   });
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   await expect(page.getByText("Loading universities…")).toBeAttached();
   await expect(page.locator('[aria-busy="true"]')).toBeVisible();
   await expect(page.getByRole("article")).toHaveCount(0);
@@ -62,7 +65,7 @@ test("honest empty state when the database has no universities", async ({
   page,
 }) => {
   await mockUniversities(page, (route) => json(route, none));
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   await expect(
     page.getByText("No universities have been added yet."),
   ).toBeVisible();
@@ -77,7 +80,7 @@ test("backend unavailable: error state, no fallback data, retry recovers", async
   await mockUniversities(page, (route, url) =>
     up ? json(route, universityPage(url)) : route.abort("connectionrefused"),
   );
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   const alert = inResults(page).getByRole("alert");
   await expect(alert).toContainText("We couldn't load universities");
   await expect(alert).toContainText("could not be reached");
@@ -92,7 +95,7 @@ test("server error shows an error state with retry", async ({ page }) => {
   await mockUniversities(page, (route) =>
     json(route, apiError(500, "Unexpected error"), 500),
   );
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   await expect(inResults(page).getByRole("alert")).toContainText(
     "had a problem",
   );
@@ -104,7 +107,7 @@ test("a malformed success response is an error, not an empty list", async ({
   page,
 }) => {
   await mockUniversities(page, (route) => json(route, { unexpected: true }));
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   await expect(inResults(page).getByRole("alert")).toBeVisible();
 });
 
@@ -112,7 +115,7 @@ test("search sends q, resets paging and is shareable via the URL", async ({
   page,
 }) => {
   const api = await mockUniversities(page);
-  await page.goto("/universities?page=2");
+  await page.goto("/universities?view=universities&page=2");
   await expect(page.getByRole("article")).toHaveCount(3);
   await page.getByLabel("University name").fill("  test university 07 ");
   await page.getByRole("button", { name: "Search" }).click();
@@ -132,7 +135,7 @@ test("search sends q, resets paging and is shareable via the URL", async ({
   await expect(page.getByLabel("University name")).toHaveValue("");
 
   // A direct visit restores the same search.
-  await page.goto("/universities?q=university+14");
+  await page.goto("/universities?view=universities&q=university+14");
   await expect(page.getByLabel("University name")).toHaveValue("university 14");
   await expect(page.getByRole("article")).toHaveCount(1);
 });
@@ -141,7 +144,9 @@ test("search and country combine, and the search survives a destination change",
   page,
 }) => {
   const api = await mockUniversities(page);
-  await page.goto("/universities?region=eu&country=germany&q=12");
+  await page.goto(
+    "/universities?view=universities&region=eu&country=germany&q=12",
+  );
   await expect(page.getByRole("article")).toHaveCount(1);
   expect(api.requests.at(-1)?.get("country")).toBe("DE");
   expect(api.requests.at(-1)?.get("q")).toBe("12");
@@ -154,7 +159,7 @@ test("search and country combine, and the search survives a destination change",
 
 test("sorting is sent to the API and kept in the URL", async ({ page }) => {
   const api = await mockUniversities(page);
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   await page.getByLabel("Sort by").selectOption("name:desc");
   await expect(page).toHaveURL(/direction=desc/);
   await expect(
@@ -171,7 +176,7 @@ test("pagination uses zero-based API pages behind one-based URLs", async ({
   page,
 }) => {
   const api = await mockUniversities(page);
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   const nav = page.getByRole("navigation", { name: "Pagination" });
   await expect(nav).toContainText("Page 1 of 2");
   await expect(nav.getByText("Previous")).toHaveAttribute(
@@ -190,7 +195,7 @@ test("pagination uses zero-based API pages behind one-based URLs", async ({
 
 test("a page beyond the last one offers a way back", async ({ page }) => {
   await mockUniversities(page);
-  await page.goto("/universities?page=9");
+  await page.goto("/universities?view=universities&page=9");
   await expect(page.getByText("That page doesn't exist")).toBeVisible();
   await page.getByRole("link", { name: "Go to the first page" }).click();
   await expect(page.getByRole("article")).toHaveCount(12);
@@ -205,7 +210,7 @@ test("the browser only ever calls the configured API origin", async ({
     if (u.pathname.startsWith("/api/")) origins.add(u.origin);
   });
   await mockUniversities(page);
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   await expect(page.getByRole("article")).toHaveCount(12);
   expect([...origins]).toEqual([API]);
 });
@@ -224,7 +229,7 @@ for (const scheme of ["light", "dark"] as const) {
       await mockUniversities(page, (route) =>
         c.abort ? route.abort("connectionrefused") : json(route, none),
       );
-      await page.goto("/universities?q=axe");
+      await page.goto("/universities?view=universities&q=axe");
       await expect(inResults(page).getByRole(c.role).first()).toBeVisible();
       await page.waitForTimeout(500);
       const results = await new AxeBuilder({ page }).analyze();
@@ -239,7 +244,7 @@ test("each view issues exactly one API request (no duplicates)", async ({
   page,
 }) => {
   const api = await mockUniversities(page);
-  await page.goto("/universities");
+  await page.goto("/universities?view=universities");
   await expect(page.getByRole("article")).toHaveCount(12);
   expect(api.requests).toHaveLength(1);
 

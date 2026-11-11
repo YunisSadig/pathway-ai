@@ -67,8 +67,14 @@ describe("presentation components", () => {
       screen.getByRole("heading", { name: "Test University" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Testville, Poland")).toBeInTheDocument();
-    // websiteUrl is null: no link, and no verification or tuition claims.
-    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    // websiteUrl is null: the only link is the university page, never a website or source link
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+    expect(
+      screen.getByRole("link", { name: "Test University" }),
+    ).toHaveAttribute("href", "/universities/test-university");
+    expect(
+      screen.queryByRole("link", { name: "University website" }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText(/verified|tuition/i)).not.toBeInTheDocument();
   });
 

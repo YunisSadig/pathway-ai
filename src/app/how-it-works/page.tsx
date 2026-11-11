@@ -15,7 +15,7 @@ import { StatusBadge, type Status } from "@/components/ui/status-badge";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "The five stages of Pathway AI, and which of them exist today. Only destination browsing is available now.",
+    "The five stages of Pathway AI, and which of them exist today. Destination and program browsing is available now; scholarships are not.",
 };
 
 const STAGES: {
@@ -26,15 +26,15 @@ const STAGES: {
   Icon: LucideIcon;
 }[] = [
   {
-    title: "Explore destinations",
-    body: "Browse regions and European Union member states to decide where to look.",
+    title: "Explore destinations and programs",
+    body: "Browse regions and member states, then degree programs with requirements, deadlines and fees as published. The data set is small and growing.",
     status: "verified",
     label: "Available now",
     Icon: Compass,
   },
   {
-    title: "Discover universities and scholarships",
-    body: "Verified institution, program and funding information will be added.",
+    title: "Discover scholarships and funding",
+    body: "Verified scholarship and funding information will be added.",
     status: "unknown",
     label: "In preparation",
     Icon: Library,

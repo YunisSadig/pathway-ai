@@ -1,0 +1,44 @@
+name: Deploy (production)
+
+# Production deploys only AFTER the CI workflow has passed on main, and only once deployment is switched on.
+# Nothing here runs until the repository variable VERCEL_DEPLOY_ENABLED is set to "true" (see docs/deployment.md).
+# Pull-request preview deployments are handled by the Vercel Git integration, not by this workflow.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && vars.VERCEL_DEPLOY_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_CLI: vercel@65.14.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # Pulls the Production environment variables (NEXT_PUBLIC_API_BASE_URL) stored in Vercel.
+      - run: npx "$VERCEL_CLI" pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
+      - run: npx "$VERCEL_CLI" build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+      - id: deploy
+        run: echo "url=$(npx "$VERCEL_CLI" deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}")" >> "$GITHUB_OUTPUT"
+      - name: Verify the deployment
+        run: node scripts/verify-deployment.mjs "${{ vars.PUBLIC_SITE_URL || steps.deploy.outputs.url }}" "${{ vars.PUBLIC_API_BASE_URL }}"

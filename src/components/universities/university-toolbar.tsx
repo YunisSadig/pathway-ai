@@ -3,17 +3,17 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MAX_SEARCH_LENGTH, type UniversityView } from "@/lib/university-query";
+import { MAX_SEARCH_LENGTH, type DiscoveryParams } from "@/lib/discovery-query";
 
 const field =
   "h-11 rounded-lg border border-border-strong bg-surface px-3 text-sm text-foreground";
 
 type Props = {
-  view: UniversityView;
-  onChange: (next: Partial<UniversityView>) => void;
+  view: DiscoveryParams;
+  onChange: (next: Partial<DiscoveryParams>) => void;
 };
 
-/** Name search and sorting. Changes are pushed to the URL by the parent. */
+/** University name search and sorting. Changes are pushed to the URL by the parent. */
 export function UniversityToolbar(props: Props) {
   // Re-mounts when the URL's search text changes (back button, clear search).
   return <ToolbarForm key={props.view.q} {...props} />;
@@ -53,8 +53,8 @@ function ToolbarForm({ view, onChange }: Props) {
           onChange={(e) => {
             const [sort, direction] = e.target.value.split(":");
             onChange({
-              sort: sort as UniversityView["sort"],
-              direction: direction as UniversityView["direction"],
+              sort,
+              direction: direction as DiscoveryParams["direction"],
             });
           }}
           className={field}

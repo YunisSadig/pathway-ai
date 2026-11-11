@@ -24,6 +24,8 @@ export interface UniversitySummary {
 }
 
 export interface ProgramSummary {
+  /** `<university-slug>--<program-slug>`: the key for `GET /api/v1/programs/{identifier}`. */
+  identifier: string;
   slug: string;
   name: string;
   degreeLevel: ProgramDegreeLevel;

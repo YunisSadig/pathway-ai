@@ -1,0 +1,16 @@
+import type { ProgramListItem } from "@/types/program";
+import { ProgramCard } from "./program-card";
+
+/** Renders nothing for an empty array: show an `EmptyState` instead. */
+export function ProgramList({ programs }: { programs: ProgramListItem[] }) {
+  if (programs.length === 0) return null;
+  return (
+    <ul className="grid gap-3 sm:grid-cols-2">
+      {programs.map((p) => (
+        <li key={p.identifier}>
+          <ProgramCard program={p} />
+        </li>
+      ))}
+    </ul>
+  );
+}

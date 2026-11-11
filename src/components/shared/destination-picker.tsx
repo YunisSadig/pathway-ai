@@ -36,8 +36,18 @@ export function DestinationPicker({ basePath }: { basePath: string }) {
 
   const href = (next: { region?: string; country?: string }) => {
     const q = new URLSearchParams();
-    // Keep the search and sort when only the destination changes.
-    for (const key of ["q", "sort", "direction"]) {
+    // Keep the view, search, filters and sort when only the destination changes.
+    for (const key of [
+      "view",
+      "q",
+      "level",
+      "field",
+      "language",
+      "tuitionMax",
+      "currency",
+      "sort",
+      "direction",
+    ]) {
       const value = params.get(key);
       if (value) q.set(key, value);
     }
