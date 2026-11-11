@@ -131,6 +131,9 @@ test.describe("program discovery", () => {
     await expect(page.getByRole("article")).toHaveCount(1);
 
     await page.getByRole("link", { name: "Clear filters" }).click();
+    // wait for the cleared view before changing the sort, or the sort would apply to the old search
+    await expect(page).not.toHaveURL(/q=/);
+    await expect(page.getByRole("article")).toHaveCount(12);
     await page
       .getByRole("combobox", { name: "Sort by" })
       .selectOption("name:desc");
