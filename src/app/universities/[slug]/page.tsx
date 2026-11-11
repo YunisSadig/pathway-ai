@@ -18,10 +18,14 @@ export function generateStaticParams() {
 
 export default function UniversityPage() {
   return (
-    <div className="page-container section-y">
-      <Suspense fallback={<LoadingState label="Loading university" rows={3} />}>
-        <UniversityDetailView />
-      </Suspense>
-    </div>
+    <Suspense
+      fallback={
+        <div className="page-container section-y">
+          <LoadingState label="Loading university" rows={3} />
+        </div>
+      }
+    >
+      <UniversityDetailView />
+    </Suspense>
   );
 }

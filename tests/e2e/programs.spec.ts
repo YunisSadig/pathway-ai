@@ -261,7 +261,12 @@ test.describe("program details", () => {
     );
     await expect(page.getByText(/last checked 2 Jan 2026/)).toBeVisible();
 
-    const tuition = page.getByRole("region", { name: "Tuition" });
+    const tuition = page.getByRole("region", { name: "Tuition & funding" });
+    await tuition
+      .locator("details")
+      .evaluateAll((els) =>
+        els.forEach((e) => ((e as HTMLDetailsElement).open = true)),
+      );
     await expect(tuition).toContainText("EUR 1,000");
     await expect(tuition).toContainText("per year");
     await expect(tuition).toContainText("Academic year 2099/2100");
@@ -283,22 +288,22 @@ test.describe("program details", () => {
     ).toHaveAttribute("href", "https://example.test/tuition/1");
 
     const deadlines = page.getByRole("region", {
-      name: "Intakes and application deadlines",
+      name: "Deadlines & intakes",
     });
     await expect(deadlines).toContainText("15 Jan 2099");
     await expect(deadlines).toContainText("This deadline has passed");
 
     // program 01 has no recorded requirements: the page says so instead of staying silent
-    const req = page.getByRole("region", { name: "Admission requirements" });
+    const req = page.getByRole("region", { name: "Admissions" });
     await expect(req).toContainText(
       "No admission requirements have been recorded",
     );
     await expect(req).toContainText("does not mean there are none");
 
     // funding is never invented
-    await expect(
-      page.getByRole("region", { name: "Scholarships and funding" }),
-    ).toContainText("no verified scholarship or tuition-waiver information");
+    await expect(tuition).toContainText(
+      "No verified scholarship or tuition-waiver information",
+    );
   });
 
   test("an unverified application link is never shown as an Apply button", async ({
@@ -316,6 +321,66 @@ test.describe("program details", () => {
     ).toHaveAttribute("href", "https://example.test/admissions/1");
   });
 
+  test("key facts come first and never present undated or outdated fees as current", async ({
+    page,
+  }) => {
+    await mockUniversities(page);
+    await page.goto(url);
+    const facts = page.locator("dl").first();
+    await expect(facts).toContainText("Tuition");
+    await expect(facts).toContainText("EUR 1,000");
+    await expect(facts).toContainText("Next deadline");
+    await expect(facts).toContainText("15 Jan 2099");
+    await expect(facts).toContainText("Funding");
+    await expect(facts).not.toContainText("EUR 500");
+    await expect(facts).not.toContainText("EUR 250");
+  });
+
+  test("section navigation lists only existing sections and jumps to headings", async ({
+    page,
+    isMobile,
+  }) => {
+    await mockUniversities(page);
+    await page.goto(url);
+    const nav = page.getByRole("navigation", { name: "On this page" });
+    await expect(nav.getByRole("link")).toHaveText([
+      "Overview",
+      "Tuition & funding",
+      "Admissions",
+      "Deadlines",
+      "Sources",
+    ]);
+    await nav.getByRole("link", { name: "Admissions" }).click();
+    await expect(page).toHaveURL(/#admissions$/);
+    const heading = page.getByRole("heading", { name: "Admissions", level: 2 });
+    await expect(heading).toBeInViewport();
+    // the sticky header and section navigation must not cover the heading
+    const top = await heading.evaluate((e) => e.getBoundingClientRect().top);
+    const covered = await nav.evaluate((e) => e.getBoundingClientRect().bottom);
+    expect(top).toBeGreaterThanOrEqual(covered - 1);
+    void isMobile;
+  });
+
+  test("evidence is collapsed by default and opens with the keyboard", async ({
+    page,
+  }) => {
+    await mockUniversities(page);
+    await page.goto(url);
+    const summary = page
+      .locator("details")
+      .filter({ hasText: "tuition/1" })
+      .locator("summary");
+    await expect(summary).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Synthetic source tuition\/1/ }),
+    ).toBeHidden();
+    await summary.focus();
+    await page.keyboard.press("Enter");
+    await expect(
+      page.getByRole("link", { name: /Synthetic source tuition\/1/ }),
+    ).toBeVisible();
+  });
+
   test("an active, verified apply link is shown with its official destination", async ({
     page,
   }) => {
@@ -326,14 +391,14 @@ test.describe("program details", () => {
     });
     await expect(apply).toHaveAttribute("href", "https://example.test/apply/2");
     await expect(apply).toHaveAttribute("rel", /noopener/);
-    const req = page.getByRole("region", { name: "Admission requirements" });
+    const req = page.getByRole("region", { name: "Admissions" });
     await expect(
-      req.getByRole("heading", { name: "Language requirements" }),
+      req.getByRole("heading", { name: "Language proficiency" }),
     ).toBeVisible();
     await expect(req).toContainText("Synthetic language requirement");
     await expect(req).toContainText("Minimum: 6.5 IELTS overall");
     await expect(
-      req.getByRole("heading", { name: "Other published requirements" }),
+      req.getByRole("heading", { name: "Admission tests" }),
     ).toBeVisible();
     // duration is unknown for program 02
     await expect(page.getByText("Not stated").first()).toBeVisible();
@@ -344,7 +409,7 @@ test.describe("program details", () => {
   }) => {
     await mockUniversities(page);
     await page.goto("/programs/synthetic-de-13--program-13");
-    const tuition = page.getByRole("region", { name: "Tuition" });
+    const tuition = page.getByRole("region", { name: "Tuition & funding" });
     await expect(tuition).toContainText(
       "No tuition information has been recorded",
     );

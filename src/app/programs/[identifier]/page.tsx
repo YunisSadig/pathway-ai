@@ -19,10 +19,14 @@ export function generateStaticParams() {
 
 export default function ProgramPage() {
   return (
-    <div className="page-container section-y">
-      <Suspense fallback={<LoadingState label="Loading program" rows={4} />}>
-        <ProgramDetailView />
-      </Suspense>
-    </div>
+    <Suspense
+      fallback={
+        <div className="page-container section-y">
+          <LoadingState label="Loading program" rows={4} />
+        </div>
+      }
+    >
+      <ProgramDetailView />
+    </Suspense>
   );
 }

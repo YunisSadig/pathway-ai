@@ -145,3 +145,23 @@ export interface ProgramQuery extends PageQuery {
   sort?: ProgramSort;
   direction?: "asc" | "desc";
 }
+
+/**
+ * Funding a program page can display. The backend has no funding endpoint yet, so nothing supplies these
+ * and the page shows one honest empty state. The kinds stay distinct so a waiver is never presented as a grant.
+ */
+export type FundingKind =
+  | "SCHOLARSHIP"
+  | "FULL_WAIVER"
+  | "PARTIAL_WAIVER"
+  | "DISCOUNT"
+  | "GRANT"
+  | "STIPEND";
+
+export interface FundingItem {
+  name: string;
+  kind: FundingKind;
+  /** The source's own description, including who is eligible. */
+  summary: string;
+  source: SourceRef;
+}

@@ -2,9 +2,10 @@ import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { ProgramCard } from "@/components/programs/program-card";
 import {
-  IntakesSection,
-  RequirementsSection,
-  TuitionSection,
+  DeadlineTimeline,
+  FundingList,
+  RequirementGroups,
+  TuitionList,
 } from "@/components/programs/program-sections";
 import type {
   Intake,
@@ -79,10 +80,10 @@ describe("ProgramCard", () => {
   });
 });
 
-describe("TuitionSection", () => {
+describe("TuitionList", () => {
   it("labels current, outdated and period-less fees and puts current first", () => {
     render(
-      <TuitionSection
+      <TuitionList
         tuition={[
           fee({
             amount: 500,
@@ -109,12 +110,12 @@ describe("TuitionSection", () => {
   });
 
   it("says nothing was recorded instead of implying free tuition", () => {
-    render(<TuitionSection tuition={[]} />);
+    render(<TuitionList tuition={[]} />);
     expect(screen.getByText(/does not mean it is free/)).toBeInTheDocument();
   });
 });
 
-describe("IntakesSection and RequirementsSection", () => {
+describe("DeadlineTimeline and RequirementGroups", () => {
   const intake: Intake = {
     label: "Autumn 2027 admission",
     academicYear: null,
@@ -126,9 +127,9 @@ describe("IntakesSection and RequirementsSection", () => {
   };
 
   it("shows an unknown deadline as not stated", () => {
-    render(<IntakesSection intakes={[intake]} />);
-    expect(screen.getByText("Application deadline")).toBeInTheDocument();
-    expect(screen.getAllByText("Not stated").length).toBeGreaterThan(0);
+    render(<DeadlineTimeline intakes={[intake]} />);
+    expect(screen.getByText("Deadline not published")).toBeInTheDocument();
+    expect(screen.getByText("Period not stated")).toBeInTheDocument();
   });
 
   it("groups language requirements and warns when none are recorded", () => {
@@ -142,19 +143,85 @@ describe("IntakesSection and RequirementsSection", () => {
       source,
     });
     const { rerender } = render(
-      <RequirementsSection
+      <RequirementGroups
         requirements={[req("LANGUAGE_TEST"), req("DOCUMENT")]}
       />,
     );
     expect(
-      screen.getByRole("heading", { name: "Language requirements" }),
+      screen.getByRole("heading", { name: "Language proficiency" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Other published requirements" }),
+      screen.getByRole("heading", { name: "Required documents" }),
     ).toBeInTheDocument();
-    rerender(<RequirementsSection requirements={[]} />);
+    rerender(<RequirementGroups requirements={[]} />);
     expect(
       screen.getByText(/does not mean there are none/),
     ).toBeInTheDocument();
+  });
+});
+
+describe("FundingList", () => {
+  it("shows one honest empty state and never promises funding", () => {
+    render(<FundingList />);
+    expect(
+      screen.getByText(/No verified scholarship or tuition-waiver/),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/not a promise|is a promise/)).toBeInTheDocument();
+  });
+
+  it("keeps funding kinds distinct and says eligibility is not automatic", () => {
+    render(
+      <FundingList
+        items={[
+          {
+            name: "Synthetic Waiver",
+            kind: "PARTIAL_WAIVER",
+            summary: "Synthetic summary",
+            source,
+          },
+          {
+            name: "Synthetic Grant",
+            kind: "GRANT",
+            summary: "Synthetic summary",
+            source,
+          },
+        ]}
+      />,
+    );
+    expect(screen.getByText("Partial tuition waiver")).toBeInTheDocument();
+    expect(screen.getByText("Fixed grant")).toBeInTheDocument();
+    expect(screen.getAllByText(/not automatic/)).toHaveLength(2);
+  });
+});
+
+describe("deadline ordering", () => {
+  it("lists current dates earliest first and outdated cycles last, by status not position", () => {
+    const mk = (
+      label: string,
+      applicationDeadline: string | null,
+      temporalStatus: Intake["temporalStatus"],
+    ): Intake => ({
+      label,
+      academicYear: null,
+      startDate: null,
+      applicationDeadline,
+      applicantCategory: null,
+      temporalStatus,
+      source,
+    });
+    render(
+      <DeadlineTimeline
+        intakes={[
+          mk("Old", "2001-01-01", "HISTORICAL"),
+          mk("Later", "2099-06-01", "CURRENT"),
+          mk("Sooner", "2099-02-01", "CURRENT"),
+        ]}
+      />,
+    );
+    const items = screen.getAllByRole("listitem");
+    expect(items[0]).toHaveTextContent("Sooner");
+    expect(items[1]).toHaveTextContent("Later");
+    expect(items[2]).toHaveTextContent("Old");
+    expect(items[2]).toHaveTextContent("This deadline has passed");
   });
 });

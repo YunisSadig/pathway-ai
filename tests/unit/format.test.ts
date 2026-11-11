@@ -6,6 +6,7 @@ import {
   formatMoney,
   languageName,
   languagesLabel,
+  nextDeadline,
   NOT_STATED,
   tuitionPeriodLabel,
 } from "@/lib/format";
@@ -80,5 +81,66 @@ describe("applicantLabel and tuitionPeriodLabel", () => {
     expect(tuitionPeriodLabel({ academicYear: null, ...none })).toBe(
       "Period not stated by the source",
     );
+  });
+});
+
+describe("nextDeadline", () => {
+  const base = {
+    label: "x",
+    academicYear: null,
+    startDate: null,
+    applicantCategory: null,
+    source: {
+      url: "https://example.test",
+      title: "t",
+      publisher: null,
+      type: "UNIVERSITY_WEBSITE",
+      retrievedOn: "2026-01-01",
+    },
+  } as const;
+
+  it("uses only current dated intakes, earliest first", () => {
+    expect(
+      nextDeadline([
+        {
+          ...base,
+          applicationDeadline: "2001-01-01",
+          temporalStatus: "HISTORICAL",
+        },
+        { ...base, applicationDeadline: null, temporalStatus: "CURRENT" },
+        {
+          ...base,
+          applicationDeadline: "2099-05-01",
+          temporalStatus: "UNKNOWN_YEAR",
+        },
+        {
+          ...base,
+          applicationDeadline: "2099-09-01",
+          temporalStatus: "CURRENT",
+        },
+        {
+          ...base,
+          applicationDeadline: "2099-03-01",
+          temporalStatus: "CURRENT",
+        },
+      ])?.applicationDeadline,
+    ).toBe("2099-03-01");
+  });
+
+  it("returns null rather than guessing from outdated or undated cycles", () => {
+    expect(
+      nextDeadline([
+        {
+          ...base,
+          applicationDeadline: "2001-01-01",
+          temporalStatus: "HISTORICAL",
+        },
+        {
+          ...base,
+          applicationDeadline: "2099-05-01",
+          temporalStatus: "UNKNOWN_YEAR",
+        },
+      ]),
+    ).toBeNull();
   });
 });
