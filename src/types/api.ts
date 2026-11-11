@@ -1,7 +1,4 @@
-/**
- * Response envelopes for the future Spring Boot REST API. Page field names mirror
- * Spring Data's `Page` so the backend can serialise it without a mapping layer.
- */
+/** Response envelopes of the Spring Boot REST API (`pathway-ai-backend`). */
 
 export interface Page<T> {
   content: T[];
@@ -12,13 +9,23 @@ export interface Page<T> {
   totalPages: number;
 }
 
-/** Error body returned by the backend for non-2xx responses. */
-export interface ApiErrorBody {
-  status: number;
+export interface FieldViolation {
+  field: string;
   message: string;
 }
 
+/** Body of every non-2xx API response. `violations` is omitted when empty. */
+export interface ApiErrorBody {
+  timestamp: string;
+  status: number;
+  error: string;
+  message: string;
+  path: string;
+  violations?: FieldViolation[];
+}
+
 export interface PageQuery {
+  /** Zero-based. */
   page?: number;
   size?: number;
 }

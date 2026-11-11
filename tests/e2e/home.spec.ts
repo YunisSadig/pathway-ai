@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { NAV } from "../../src/lib/site";
+import { mockUniversities } from "./helpers/api";
 
 test("hero shows the headline and two working calls to action", async ({
   page,
@@ -67,6 +68,7 @@ for (const path of NAV.map((n) => n.href)) {
     test(`no horizontal overflow on ${path} at ${width}px`, async ({
       page,
     }) => {
+      await mockUniversities(page);
       await page.setViewportSize({ width, height: 900 });
       await page.goto(
         path === "/universities"
@@ -87,6 +89,7 @@ for (const scheme of ["light", "dark"] as const) {
     "/universities?region=eu&country=poland",
   ]) {
     test(`no axe violations on ${path} (${scheme})`, async ({ page }) => {
+      await mockUniversities(page);
       await page.emulateMedia({ colorScheme: scheme });
       await page.goto(path);
       await page.waitForTimeout(1200);

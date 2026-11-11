@@ -1,31 +1,51 @@
-import type { DegreeLevel, Money, SourceInfo } from "./common";
 import type { PageQuery } from "./api";
 
-export interface University extends SourceInfo {
-  id: string;
+/**
+ * Contracts for the Spring Boot university API (`/api/v1/universities`). Field names and
+ * nullability mirror the backend's JSON exactly. The API does not yet expose an id,
+ * tuition, admission requirements or source/verification information, so none are modelled:
+ * anything absent from the API is unknown to the frontend.
+ */
+
+/** Upper-case, as serialised by the backend enum. */
+export type ProgramDegreeLevel =
+  "BACHELOR" | "MASTER" | "DOCTORATE" | "DIPLOMA" | "CERTIFICATE";
+
+/** One row of `GET /api/v1/universities`. */
+export interface UniversitySummary {
   slug: string;
   name: string;
-  /** ISO 3166-1 alpha-2, matches `Country.code` in `geography.ts`. */
+  /** Nullable in the database although the backend README documents a string. */
+  city: string | null;
+  /** ISO 3166-1 alpha-2. */
   countryCode: string;
-  city: string;
-  websiteUrl?: string;
+  countryName: string;
+  websiteUrl: string | null;
 }
 
-export interface DegreeProgram extends SourceInfo {
-  id: string;
-  universityId: string;
+export interface ProgramSummary {
+  slug: string;
   name: string;
-  level: DegreeLevel;
-  /** ISO 639-1 language codes. */
-  teachingLanguages: string[];
-  durationMonths?: number;
-  /** Yearly tuition. Absent means unknown, never zero. */
-  tuitionPerYear?: Money;
-  admissionRequirements?: string[];
+  degreeLevel: ProgramDegreeLevel;
+  fieldOfStudy: string | null;
+  durationMonths: number | null;
+  teachingLanguage: string | null;
 }
+
+/** `GET /api/v1/universities/{slug}`. */
+export interface UniversityDetail extends UniversitySummary {
+  description: string | null;
+  programs: ProgramSummary[];
+}
+
+export type UniversitySort = "name" | "city";
+export type SortDirection = "asc" | "desc";
 
 export interface UniversityQuery extends PageQuery {
-  /** ISO 3166-1 alpha-2 country codes. */
-  countryCodes?: string[];
-  search?: string;
+  /** Case-insensitive name search, at most 100 characters. */
+  q?: string;
+  /** A single ISO 3166-1 alpha-2 code. The API does not accept a list. */
+  country?: string;
+  sort?: UniversitySort;
+  direction?: SortDirection;
 }

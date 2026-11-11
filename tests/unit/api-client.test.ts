@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError, apiGet, buildQuery } from "@/lib/api/client";
-import { listUniversities } from "@/lib/api/universities";
+import { getUniversity, listUniversities } from "@/lib/api/universities";
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -42,10 +42,93 @@ describe("apiGet", () => {
       ),
     );
     vi.stubGlobal("fetch", fetchMock);
-    const page = await listUniversities({ countryCodes: ["PL"], page: 0 });
+    const page = await listUniversities({
+      country: "PL",
+      q: "tech",
+      page: 0,
+      size: 12,
+      sort: "city",
+      direction: "desc",
+    });
     expect(page.totalElements).toBe(0);
     expect(fetchMock.mock.calls[0][0]).toBe(
-      "https://api.test/api/universities?countryCodes=PL&page=0",
+      "https://api.test/api/v1/universities?country=PL&q=tech&page=0&size=12&sort=city&direction=desc",
+    );
+  });
+
+  it("reports an unreachable backend as ApiError status 0", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.test");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockRejectedValue(new TypeError("fetch failed")),
+    );
+    await expect(listUniversities()).rejects.toMatchObject({
+      status: 0,
+      message: "The data service could not be reached.",
+    });
+  });
+
+  it("rethrows aborts instead of reporting a failure", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.test");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockRejectedValue(new DOMException("aborted", "AbortError")),
+    );
+    const err = await listUniversities().catch((e) => e);
+    expect(err).not.toBeInstanceOf(ApiError);
+    expect(err.name).toBe("AbortError");
+  });
+
+  it("uses the backend ApiError body (400 with violations)", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.test");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            timestamp: "2000-01-01T00:00:00Z",
+            status: 400,
+            error: "Bad Request",
+            message: "Invalid request parameters",
+            path: "/api/v1/universities",
+            violations: [
+              { field: "size", message: "must be between 1 and 100" },
+            ],
+          }),
+          { status: 400 },
+        ),
+      ),
+    );
+    await expect(listUniversities({ size: 0 })).rejects.toMatchObject({
+      status: 400,
+      message: "Invalid request parameters",
+    });
+  });
+
+  it("falls back to the status text when the error body is not JSON", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.test");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response("Invalid CORS request", {
+          status: 403,
+          statusText: "Forbidden",
+        }),
+      ),
+    );
+    await expect(listUniversities()).rejects.toMatchObject({
+      status: 403,
+      message: "Forbidden",
+    });
+  });
+
+  it("encodes the slug for the detail endpoint", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.test");
+    const fetchMock = vi.fn().mockResolvedValue(new Response("{}"));
+    vi.stubGlobal("fetch", fetchMock);
+    await getUniversity("a b");
+    expect(fetchMock.mock.calls[0][0]).toBe(
+      "https://api.test/api/v1/universities/a%20b",
     );
   });
 
