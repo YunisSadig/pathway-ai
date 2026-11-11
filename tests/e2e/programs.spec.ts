@@ -336,6 +336,49 @@ test.describe("program details", () => {
     await expect(facts).not.toContainText("EUR 250");
   });
 
+  test("key facts list every current fee with its applicant group and flag other uncertainty", async ({
+    page,
+  }) => {
+    await mockUniversities(page);
+    const base = programDetail(PROGRAMS[0]);
+    const src = base.tuition[0].source;
+    const fee = (over: Record<string, unknown>) => ({
+      ...base.tuition[0],
+      academicYear: "2099/2100",
+      temporalStatus: "CURRENT",
+      source: src,
+      ...over,
+    });
+    await mockPrograms(page, (route) =>
+      json(route, {
+        ...base,
+        tuition: [
+          fee({ amount: 9000, studentCategory: "DOMESTIC" }),
+          fee({ amount: 21000, studentCategory: "INTERNATIONAL" }),
+          fee({
+            amount: 7,
+            studentCategory: "INTERNATIONAL",
+            academicYear: null,
+            temporalStatus: "UNKNOWN_YEAR",
+          }),
+        ],
+      }),
+    );
+    await page.goto(url);
+    const facts = page.locator("dl").first();
+    await expect(facts).toContainText("EUR 9,000");
+    await expect(facts).toContainText("Domestic applicants");
+    await expect(facts).toContainText("EUR 21,000");
+    await expect(facts).toContainText("International applicants");
+    await expect(facts).toContainText("The fee depends on the applicant group");
+    await expect(facts).toContainText("Another fee has no stated year");
+    await expect(facts).not.toContainText("EUR 7");
+    // the undated fee's warning is visible without opening any Evidence disclosure
+    await expect(
+      page.getByText(/The source gives no year for this fee/),
+    ).toBeVisible();
+  });
+
   test("section navigation lists only existing sections and jumps to headings", async ({
     page,
     isMobile,

@@ -13,12 +13,8 @@ import { cn } from "@/lib/utils";
 import { ClampText } from "@/components/shared/clamp-text";
 import { Evidence, Missing, Notice } from "@/components/shared/detail-ui";
 import { TemporalBadge } from "@/components/shared/fact-ui";
-import type {
-  FundingItem,
-  Intake,
-  Requirement,
-  Tuition,
-} from "@/types/program";
+import type { FundingItem } from "@/types/funding";
+import type { Intake, Requirement, Tuition } from "@/types/program";
 
 /*
  * Content blocks for the program page. They render facts only: the surrounding section, its heading and
@@ -82,7 +78,15 @@ export function TuitionList({ tuition }: { tuition: Tuition[] }) {
                     not today&apos;s price.
                   </Notice>
                 ) : null}
-                <Evidence source={t.source} note={t.scopeNote} />
+                {t.scopeNote ? (
+                  <div className="text-sm text-muted-foreground">
+                    <ClampText
+                      text={`Source wording: “${t.scopeNote}”`}
+                      limit={200}
+                    />
+                  </div>
+                ) : null}
+                <Evidence source={t.source} />
               </div>
             </li>
           );

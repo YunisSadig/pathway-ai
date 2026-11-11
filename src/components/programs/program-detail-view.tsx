@@ -25,7 +25,6 @@ import { SectionNav } from "@/components/shared/section-nav";
 import { API_NOT_CONFIGURED } from "@/lib/api/client";
 import { getProgram } from "@/lib/api/programs";
 import {
-  applicantLabel,
   byTemporalStatus,
   DEGREE_LABELS,
   durationLabel,
@@ -119,7 +118,7 @@ function KeyFact({
   muted?: boolean;
 }) {
   return (
-    <div className="grid content-start gap-1 p-4 sm:p-5">
+    <div className="grid content-start gap-1 bg-surface p-4 sm:p-5">
       <dt className="text-sm text-muted-foreground">
         <a
           href={href}
@@ -144,8 +143,9 @@ function KeyFact({
 }
 
 /**
- * Tuition at a glance. Only fees the backend marks CURRENT are shown as a price; an undated or outdated
- * fee is described as such and never promoted to "the fee".
+ * Tuition at a glance. Every fee the backend marks CURRENT is listed with the applicant group it applies to,
+ * so no fee reads as "the" price for everyone. An undated or outdated fee is described as such and is never
+ * promoted to a price.
  */
 function tuitionFact(p: ProgramDetail): {
   value: React.ReactNode;
@@ -153,24 +153,35 @@ function tuitionFact(p: ProgramDetail): {
   muted?: boolean;
 } {
   const current = p.tuition.filter((t) => t.temporalStatus === "CURRENT");
+  const undated = p.tuition.some((t) => t.temporalStatus === "UNKNOWN_YEAR");
+  const group = (c: "DOMESTIC" | "INTERNATIONAL") =>
+    c === "DOMESTIC" ? "Domestic applicants" : "International applicants";
   if (current.length > 0) {
-    const [first, ...rest] = current;
+    const groups = new Set(current.map((t) => t.studentCategory));
     return {
-      value: formatMoney(first.amount, first.currency),
+      value: (
+        <span className="grid gap-1">
+          {current.map((t, i) => (
+            <span key={i} className="block">
+              {formatMoney(t.amount, t.currency)}
+              <span className="block text-sm font-medium text-muted-foreground">
+                {BILLING_LABELS[t.billingPeriod]} · {group(t.studentCategory)}
+              </span>
+            </span>
+          ))}
+        </span>
+      ),
       detail: (
         <>
-          {BILLING_LABELS[first.billingPeriod]} ·{" "}
-          {first.studentCategory === "DOMESTIC"
-            ? "domestic applicants"
-            : "international applicants"}
-          {rest.length > 0
-            ? `. ${rest.length} more current fee${rest.length > 1 ? "s" : ""} below`
-            : ""}
+          {groups.size === 1
+            ? "Fees for other applicant groups are not recorded."
+            : "The fee depends on the applicant group."}
+          {undated ? " Another fee has no stated year." : ""}
         </>
       ),
     };
   }
-  if (p.tuition.some((t) => t.temporalStatus === "UNKNOWN_YEAR")) {
+  if (undated) {
     return {
       value: "Year not confirmed",
       detail: "A fee was found but its year is not stated. See details.",
@@ -290,7 +301,7 @@ function ProgramDetailContent({ p }: { p: ProgramDetail }) {
               </p>
             </div>
 
-            <div className="grid gap-3 sm:min-w-64">
+            <div className="grid gap-3 sm:max-w-sm lg:min-w-64">
               {p.officialApplicationUrl ? (
                 <a
                   href={p.officialApplicationUrl}
@@ -336,7 +347,7 @@ function ProgramDetailContent({ p }: { p: ProgramDetail }) {
       </header>
 
       <div className="page-container pt-6 sm:pt-8">
-        <dl className="grid divide-y divide-border rounded-xl border border-border-strong bg-surface sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 lg:divide-x">
+        <dl className="grid gap-px overflow-hidden rounded-xl border border-border-strong bg-border-strong sm:grid-cols-2 lg:grid-cols-4">
           <KeyFact
             label="Tuition"
             href="#tuition"
@@ -414,12 +425,12 @@ function ProgramDetailContent({ p }: { p: ProgramDetail }) {
           title="Tuition & funding"
           intro="Fees as published, with the period the source attached to each."
         >
-          <div className="grid gap-10">
+          <div className="grid gap-8">
             <div>
               <h3 className="mb-4 text-base font-bold">Tuition</h3>
               <TuitionList tuition={p.tuition} />
             </div>
-            <div>
+            <div className="border-t border-border pt-6">
               <h3 className="mb-3 text-base font-bold">
                 Scholarships and funding
               </h3>

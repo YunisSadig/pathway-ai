@@ -1,7 +1,7 @@
+import type { FundingKind } from "@/types/funding";
 import type {
   ApplicantCategory,
   BillingPeriod,
-  FundingKind,
   Intake,
   ProgramDegreeLevel,
   RequirementType,

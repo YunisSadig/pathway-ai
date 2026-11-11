@@ -32,7 +32,8 @@ The only bordered surface above the fold is the key-facts band. Cards remain on 
 
 ## Trust rules kept (and tested)
 
-- The key-facts tuition shows a price only for a fee the backend marks `CURRENT`; otherwise it says the year is unconfirmed, that only outdated fees exist, or that none is published.
+- The key-facts tuition lists every `CURRENT` fee with its applicant group (never a single fee as "the" price). With one group it says fees for other groups are not recorded; with several it says the fee depends on the group; an undated extra fee is flagged. With no current fee it says the year is unconfirmed, that only outdated fees exist, or that none is published.
+- Material uncertainty (undated or outdated warnings, the source's own scope wording) stays visible; only the citation link and read date are collapsed under `Evidence`.
 - "Next deadline" is the earliest dated `CURRENT` intake. Outdated or undated cycles never produce one (`nextDeadline`, unit tested).
 - Order and status come from `temporalStatus`, not list position. Outdated items stay visible, struck through and labelled.
 - Requirement groups map only API `RequirementType`s. No subject-prerequisite or portfolio group exists because the API has no such type; a general description is shown as published.
@@ -41,6 +42,5 @@ The only bordered surface above the fold is the key-facts band. Cards remain on 
 
 ## Limitations
 
-- No funding API; no structured eligibility; the funding kinds are a frontend contract that must be checked against a future backend DTO.
-- The key-facts band shows only the first current fee plus a count when several exist.
+- No funding API; no structured eligibility. `src/types/funding.ts` is explicitly provisional and frontend-only: it is not a backend contract and `check-contract.mjs` does not cover it. Replace it with DTO-mirrored types when a funding API exists.
 - Scroll-spy uses a fixed `rootMargin` tuned to the 4rem header and the navigation bar.
