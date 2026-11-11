@@ -9,7 +9,7 @@ export function UniversityList({
 }) {
   if (universities.length === 0) return null;
   return (
-    <ul className="grid gap-3 sm:grid-cols-2">
+    <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface">
       {universities.map((u) => (
         <li key={u.slug}>
           <UniversityCard university={u} />

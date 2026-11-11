@@ -49,7 +49,11 @@ export function UniversitiesPanel({
   return (
     <div className="grid gap-6">
       <UniversityToolbar view={params} onChange={onChange} />
-      <section aria-labelledby="results-title" aria-live="polite">
+      <section
+        aria-labelledby="results-title"
+        aria-live="polite"
+        className="min-h-[75vh]"
+      >
         <h2 id="results-title" className="sr-only">
           University results
         </h2>
@@ -109,7 +113,7 @@ export function UniversitiesPanel({
           </EmptyState>
         ) : (
           <div className="grid gap-5">
-            <p className="text-sm text-muted-foreground">
+            <p className="font-semibold">
               {state.data.totalElements}{" "}
               {state.data.totalElements === 1 ? "university" : "universities"}
               {label ? ` in ${label}` : ""}

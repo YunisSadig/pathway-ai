@@ -37,7 +37,7 @@
   --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.06);
   --shadow-md: 0 8px 24px -8px rgb(16 24 40 / 0.14);
   --shadow-lg: 0 24px 48px -16px rgb(16 24 40 / 0.2);
-  --radius: 0.75rem;
+  --radius: 0.5rem;
   color-scheme: light;
 }
 
@@ -109,18 +109,17 @@
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 6px);
+  --radius-xl: calc(var(--radius) + 4px);
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-display:
-    var(--font-manrope), var(--font-geist-sans), system-ui, sans-serif;
+  --font-display: var(--font-geist-sans), system-ui, sans-serif;
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /*
  * Shared layout and type utilities. Every page uses these so widths, section
  * rhythm and heading scale stay consistent.
- * Radii: cards = xl, nested items = lg, controls = lg.
- * Shadows: cards use sm; only floating layers (menus, hero preview) use md/lg.
+ * Radii: 8px (lg) controls and chips, 12px (xl) containers. Pills (full) only for status chips.
+ * Shadows: none on surfaces (borders do the work); only floating layers (menus, dialogs) use md/lg.
  */
 @utility page-container {
   margin-inline: auto;
@@ -132,20 +131,19 @@
   }
 }
 @utility section-y {
-  padding-block: 3.5rem;
+  padding-block: 2.5rem;
   @media (min-width: 64rem) {
-    padding-block: 5rem;
+    padding-block: 4rem;
   }
 }
 @utility card {
   border: 1px solid var(--border);
   background: var(--surface);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
 }
 @utility title-hero {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(2.5rem, 1.6rem + 4.2vw, 4.5rem);
   line-height: 1.04;
   letter-spacing: -0.03em;
@@ -153,14 +151,14 @@
 }
 @utility title-section {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
   line-height: 1.15;
   text-wrap: balance;
 }
 @utility title-page {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.75rem);
   line-height: 1.12;
   text-wrap: balance;

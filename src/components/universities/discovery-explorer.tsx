@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { UniversitiesPanel } from "./universities-panel";
 
 const tab =
-  "inline-flex min-h-11 items-center rounded-lg px-4 text-sm font-semibold transition-colors duration-150";
+  "inline-flex min-h-11 items-center rounded-md px-4 text-sm font-semibold transition-colors duration-150";
 
 /**
  * Program-first discovery. Choose a destination, then browse programs (default) or the universities that offer
@@ -42,10 +42,13 @@ export function DiscoveryExplorer() {
     });
 
   return (
-    <div className="grid gap-8">
+    <div className="grid gap-6">
       <DestinationPicker basePath="/universities" />
 
-      <nav aria-label="Browse by" className="flex flex-wrap gap-2">
+      <nav
+        aria-label="Browse by"
+        className="flex w-fit gap-1 rounded-lg border border-border bg-muted p-1"
+      >
         {(
           [
             ["programs", "Programs"],
@@ -73,8 +76,8 @@ export function DiscoveryExplorer() {
             className={cn(
               tab,
               params.view === view
-                ? "bg-primary text-primary-foreground"
-                : "border border-border bg-surface hover:bg-hover",
+                ? "bg-surface text-foreground ring-1 ring-border-strong"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             {text}

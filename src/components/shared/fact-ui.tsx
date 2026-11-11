@@ -1,7 +1,7 @@
 import { ExternalLink as ExternalIcon } from "lucide-react";
-import { formatDate, TEMPORAL_HELP, TEMPORAL_LABELS } from "@/lib/format";
+import { TEMPORAL_HELP, TEMPORAL_LABELS } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import type { SourceRef, TemporalStatus } from "@/types/program";
+import type { TemporalStatus } from "@/types/program";
 
 const TEMPORAL_STYLES: Record<TemporalStatus, string> = {
   CURRENT: "bg-success-soft text-success",
@@ -15,7 +15,7 @@ export function TemporalBadge({ status }: { status: TemporalStatus }) {
     <span
       title={TEMPORAL_HELP[status]}
       className={cn(
-        "inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap",
+        "inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-sm font-semibold whitespace-nowrap",
         TEMPORAL_STYLES[status],
       )}
     >
@@ -48,37 +48,5 @@ export function ExternalLink({
       <ExternalIcon aria-hidden className="size-3.5 shrink-0" />
       <span className="sr-only"> (opens in a new tab)</span>
     </a>
-  );
-}
-
-/** Every fact cites where it came from and when that page was read. */
-export function SourceLine({ source }: { source: SourceRef }) {
-  return (
-    <p className="text-xs text-muted-foreground">
-      Source:{" "}
-      <ExternalLink href={source.url} className="text-xs">
-        {source.publisher ? `${source.publisher}: ` : ""}
-        {source.title}
-      </ExternalLink>{" "}
-      · read {formatDate(source.retrievedOn)}
-    </p>
-  );
-}
-
-/** A labelled value. Missing values read "Not stated", never blank. */
-export function Fact({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="min-w-0">
-      <dt className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-        {label}
-      </dt>
-      <dd className="mt-0.5 font-medium break-words">{children}</dd>
-    </div>
   );
 }

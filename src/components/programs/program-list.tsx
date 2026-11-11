@@ -5,7 +5,7 @@ import { ProgramCard } from "./program-card";
 export function ProgramList({ programs }: { programs: ProgramListItem[] }) {
   if (programs.length === 0) return null;
   return (
-    <ul className="grid gap-3 sm:grid-cols-2">
+    <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface">
       {programs.map((p) => (
         <li key={p.identifier}>
           <ProgramCard program={p} />

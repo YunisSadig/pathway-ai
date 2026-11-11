@@ -10,6 +10,18 @@ import {
   programPage,
 } from "./helpers/api";
 
+/** On narrow screens the filter fields sit behind a "Filters" button; opens it when it is shown and collapsed. */
+async function openFilters(page: import("@playwright/test").Page) {
+  // the static shell shows a fallback until the client renders: wait for the real form before looking for the toggle
+  await page.getByRole("search", { name: "Filter programs" }).waitFor();
+  const toggle = page.getByRole("button", { name: /^Filters/ });
+  if (!(await toggle.isVisible())) return;
+  if ((await toggle.getAttribute("aria-expanded")) === "false") {
+    await toggle.click();
+  }
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+}
+
 const none = {
   content: [],
   number: 0,
@@ -36,7 +48,9 @@ test.describe("program discovery", () => {
     await expect(first).toContainText("English");
     await expect(first).toContainText("Read from official pages on 2 Jan 2026");
     // program 02 has no stated duration: it says so and invents nothing
-    await expect(page.getByRole("article").nth(1)).toContainText("Not stated");
+    await expect(page.getByRole("article").nth(1)).toContainText(
+      "Duration not stated",
+    );
     await expect(page.getByRole("article").first()).not.toContainText(
       /rank|probability|chance|guarantee|scholarship awarded/i,
     );
@@ -47,6 +61,7 @@ test.describe("program discovery", () => {
   }) => {
     const api = await mockUniversities(page);
     await page.goto("/universities");
+    await openFilters(page);
     await expect(page.getByRole("article")).toHaveCount(12);
 
     await page
@@ -79,6 +94,7 @@ test.describe("program discovery", () => {
   }) => {
     await mockUniversities(page);
     await page.goto("/universities");
+    await openFilters(page);
     const discipline = page.getByRole("combobox", { name: "Discipline" });
     await expect(discipline.locator("option")).toHaveText([
       "Any discipline",
@@ -97,6 +113,7 @@ test.describe("program discovery", () => {
   }) => {
     const api = await mockUniversities(page);
     await page.goto("/universities");
+    await openFilters(page);
     await page.getByLabel("Maximum yearly tuition").fill("3000");
     await page.getByRole("combobox", { name: "Currency" }).selectOption("EUR");
     await page.getByRole("button", { name: "Apply filters" }).click();
@@ -115,6 +132,7 @@ test.describe("program discovery", () => {
   }) => {
     const api = await mockUniversities(page);
     await page.goto("/universities");
+    await openFilters(page);
     const nav = page.getByRole("navigation", { name: "Pagination" });
     await expect(nav).toContainText("Page 1 of 2");
     await nav.getByRole("link", { name: "Next" }).click();
@@ -148,6 +166,7 @@ test.describe("program discovery", () => {
   }) => {
     const api = await mockUniversities(page);
     await page.goto("/universities");
+    await openFilters(page);
     await expect(page.getByRole("article")).toHaveCount(12);
     const choices = () => api.requests.filter((r) => r.get("size") === "100");
     // one list request and one request for the filter choices
@@ -590,8 +609,67 @@ test.describe("accessibility and layout of the new pages", () => {
   test("filters are usable with the keyboard", async ({ page }) => {
     await mockUniversities(page);
     await page.goto("/universities");
+    await openFilters(page);
     await page.getByRole("combobox", { name: "Degree level" }).focus();
     await page.keyboard.press("ArrowDown");
     await expect(page).toHaveURL(/level=/);
+  });
+});
+
+test.describe("discovery toolbar", () => {
+  test("each active filter is shown as a chip that removes just that filter", async ({
+    page,
+  }) => {
+    await mockUniversities(page);
+    await page.goto("/universities?level=master&language=de");
+    await openFilters(page);
+    const chips = page.getByRole("list", { name: "Active filters" });
+    await expect(chips).toContainText("Master's");
+    await expect(chips).toContainText("German");
+    await chips.getByRole("link", { name: /Master's/ }).click();
+    await expect(page).toHaveURL(/language=de/);
+    await expect(page).not.toHaveURL(/level=/);
+    await expect(chips).not.toContainText("Master's");
+    await expect(chips).toContainText("German");
+    await chips.getByRole("link", { name: "Clear filters" }).click();
+    await expect(page).toHaveURL(/\/universities$/);
+    await expect(
+      page.getByRole("list", { name: "Active filters" }),
+    ).toHaveCount(0);
+  });
+
+  test("on narrow screens the filter fields are collapsed until asked for; on wide screens they are always shown", async ({
+    page,
+    isMobile,
+  }) => {
+    await mockUniversities(page);
+    await page.goto("/universities");
+    await page.getByRole("search", { name: "Filter programs" }).waitFor();
+    const level = page.getByRole("combobox", { name: "Degree level" });
+    if (isMobile) {
+      await expect(level).toBeHidden();
+      await openFilters(page);
+      await expect(level).toBeVisible();
+    } else {
+      await expect(level).toBeVisible();
+      await expect(page.getByRole("button", { name: /^Filters/ })).toBeHidden();
+    }
+  });
+
+  test("a chosen destination collapses to a one-line summary above the results", async ({
+    page,
+  }) => {
+    await mockUniversities(page);
+    await page.goto("/universities?region=eu&country=germany");
+    await expect(page.getByText("Germany, European Union")).toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "European Union member states" }),
+    ).toBeHidden();
+    // results start high on the page rather than below a wall of country buttons
+    const top = await page
+      .getByRole("article")
+      .first()
+      .evaluate((e) => e.getBoundingClientRect().top + window.scrollY);
+    expect(top).toBeLessThan(1000);
   });
 });

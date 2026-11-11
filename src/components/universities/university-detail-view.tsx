@@ -16,7 +16,9 @@ import { useApiQuery } from "@/lib/use-api-query";
 import type { UniversityDetail } from "@/types/university";
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return <div className="page-container section-y">{children}</div>;
+  return (
+    <div className="page-container min-h-[100svh] section-y">{children}</div>
+  );
 }
 
 export function UniversityDetailView() {
@@ -135,7 +137,7 @@ export function UniversityDetailView() {
                   key={p.identifier}
                   className="grid gap-0.5 py-4 first:pt-0 last:pb-0"
                 >
-                  <p className="text-xs font-semibold tracking-wide text-primary-soft-foreground uppercase">
+                  <p className="text-sm font-semibold text-primary-soft-foreground">
                     {DEGREE_LABELS[p.degreeLevel]}
                   </p>
                   <h3 className="text-lg leading-snug font-bold">
