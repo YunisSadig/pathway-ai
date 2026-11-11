@@ -7,18 +7,16 @@ import { ScholarshipList } from "@/components/scholarships/scholarship-list";
 import { UniversityList } from "@/components/universities/university-list";
 import { countryName } from "@/lib/geography";
 import type { Scholarship } from "@/types/scholarship";
-import type { University } from "@/types/university";
+import type { UniversitySummary } from "@/types/university";
 
 // Synthetic fixtures for component tests only. They never ship in the app.
-const university: University = {
-  id: "u1",
+const university: UniversitySummary = {
   slug: "test-university",
   name: "Test University",
-  countryCode: "PL",
   city: "Testville",
-  sourceUrl: "https://example.test/source",
-  checkedAt: "2000-01-01",
-  verification: "unverified",
+  countryCode: "PL",
+  countryName: "Poland",
+  websiteUrl: null,
 };
 
 const scholarship: Scholarship = {
@@ -63,16 +61,15 @@ describe("data states", () => {
 });
 
 describe("presentation components", () => {
-  it("UniversityList renders API data and marks unverified records", () => {
+  it("UniversityList renders API data and invents nothing the API lacks", () => {
     render(<UniversityList universities={[university]} />);
     expect(
       screen.getByRole("heading", { name: "Test University" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Testville, Poland")).toBeInTheDocument();
-    expect(screen.getByText("Not verified")).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Official source" }),
-    ).toHaveAttribute("href", "https://example.test/source");
+    // websiteUrl is null: no link, and no verification or tuition claims.
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.queryByText(/verified|tuition/i)).not.toBeInTheDocument();
   });
 
   it("ScholarshipList renders API data and an unknown deadline honestly", () => {
@@ -91,5 +88,17 @@ describe("presentation components", () => {
       </>,
     );
     expect(container).toBeEmptyDOMElement();
+  });
+});
+
+describe("nullable API fields", () => {
+  it("UniversityCard shows only the country when the city is null", () => {
+    render(
+      <UniversityList
+        universities={[{ ...university, city: null, countryName: "Poland" }]}
+      />,
+    );
+    expect(screen.getByText("Poland")).toBeInTheDocument();
+    expect(screen.queryByText(/null|,/)).not.toBeInTheDocument();
   });
 });

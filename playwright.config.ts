@@ -20,6 +20,9 @@ export default defineConfig({
   webServer: {
     command: `npm run build && npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}`,
+    // The API origin is inlined at build time. Tests intercept it in the browser, so no real
+    // backend is needed. A stale server on this port would have been built without it.
+    env: { NEXT_PUBLIC_API_BASE_URL: "http://api.pathway.test" },
     reuseExistingServer: !process.env.CI,
     timeout: 240_000,
   },

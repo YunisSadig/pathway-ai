@@ -28,9 +28,9 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-border">
         <p className="page-container py-5 text-sm text-muted-foreground">
-          Pathway AI does not list universities or scholarships yet. When it
-          does, confirm every requirement, fee and deadline on the official
-          website.
+          Pathway AI does not list scholarships yet, and shows no tuition,
+          requirements or deadlines. Always confirm them on the official
+          university website.
         </p>
       </div>
     </footer>
